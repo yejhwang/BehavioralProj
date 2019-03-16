@@ -1,0 +1,24 @@
+Effects on Search and Employment Outcomes \label{tab:peer}
+--------------------------------------------------------------------------------------------------------------
+                \multicolumn{2}{c}{Search}            \multicolumn{3}{c}{Employment}                          \cmidrule(lr){2-3}\cmidrule(lr){4-6}
+                            (1)                (2)                (3)                (4)                (5)   
+                   Search Hours       Applications     Empl Responses         Job Offers           Employed   
+--------------------------------------------------------------------------------------------------------------
+WS Basic                  0.023              0.118             -0.028              0.022              0.020   
+                        (0.897)            (0.273)            (0.059)            (0.022)            (0.025)   
+
+WS Plus                  -0.217              0.392              0.051              0.050**            0.059** 
+                        (0.907)            (0.305)            (0.064)            (0.025)            (0.027)   
+
+WS Plus x Peer           -0.494              0.545              0.095              0.019             -0.019   
+                        (0.974)            (0.366)            (0.074)            (0.030)            (0.031)   
+--------------------------------------------------------------------------------------------------------------
+Observations               1886               1895               1894               1881               1969   
+R-squared                 0.092              0.320              0.110              0.021              0.024   
+Control Mean             14.095              3.835              0.544              0.130              0.115   
+--------------------------------------------------------------------------------------------------------------
+Notes: * p\textless 0.10, ** p\textless 0.05, *** p\textless 0.01. Regressions use panel data over two follow-up periods.
+Standard errors (reported in parentheses) are clustered at the individual level. 
+Coefficient on Peer interaction term expresses the additional value of the peer support. 
+All regressions control for location-fixed effects and baseline value of the outcome variable.
+Outcome variables are winsorized at the 5\% level.

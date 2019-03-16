@@ -1,0 +1,27 @@
+Effects on Search and Employment Outcomes \label{tab:reminder}
+--------------------------------------------------------------------------------------------------------------
+                \multicolumn{2}{c}{Search}            \multicolumn{3}{c}{Employment}                          \cmidrule(lr){2-3}\cmidrule(lr){4-6}
+                            (1)                (2)                (3)                (4)                (5)   
+                   Search Hours       Applications     Empl Responses         Job Offers           Employed   
+--------------------------------------------------------------------------------------------------------------
+WS Basic                 -0.344              0.093              0.049              0.025              0.015   
+                        (1.065)            (0.316)            (0.071)            (0.027)            (0.030)   
+
+WS Plus                  -0.724              0.496*             0.089              0.077***           0.043*  
+                        (0.890)            (0.282)            (0.061)            (0.026)            (0.025)   
+
+WS Basic X Re~r           0.939              0.076             -0.200**           -0.007              0.011   
+                        (1.520)            (0.523)            (0.099)            (0.038)            (0.046)   
+
+WS Plus X Rem~r           0.438              0.354              0.032             -0.031              0.012   
+                        (0.977)            (0.366)            (0.073)            (0.030)            (0.031)   
+--------------------------------------------------------------------------------------------------------------
+Observations               1886               1895               1894               1881               1969   
+R-squared                 0.092              0.319              0.111              0.022              0.024   
+Control Mean             14.095              3.835              0.544              0.130              0.115   
+--------------------------------------------------------------------------------------------------------------
+Notes: * p\textless 0.10, ** p\textless 0.05, *** p\textless 0.01. Regressions use panel data over two follow-up periods.
+Standard errors (reported in parentheses) are clustered at the individual level. 
+Coefficients on Reminder interaction terms express the additional value of the reminder. 
+All regressions control for location-fixed effects and baseline value of the outcome variable.
+Outcome variables are winsorized at the 5\% level.

@@ -1,0 +1,21 @@
+Effects on Frequency of Search Channel Use \label{tab:channels}
+---------------------------------------------------------------------------------------------------------------------------------
+                            (1)                (2)                (3)                (4)                (5)                (6)   
+                    Empl Agency         Dropped CV          Placed Ad        Answered Ad    Searched Online        Fam/Friends   
+---------------------------------------------------------------------------------------------------------------------------------
+WS Basic                 -0.016             -0.140              0.060             -0.068              0.058             -0.048   
+                        (0.139)            (0.131)            (0.144)            (0.122)            (0.130)            (0.102)   
+
+WS Plus                   0.362***           0.253**            0.153              0.301***           0.410***          -0.021   
+                        (0.123)            (0.115)            (0.119)            (0.107)            (0.100)            (0.081)   
+---------------------------------------------------------------------------------------------------------------------------------
+Observations               1937               1936               1934               1927               1931               1926   
+R-squared                 0.093              0.069              0.028              0.088              0.364              0.045   
+Control Mean              2.125              2.826              1.532              3.253              4.203              4.839   
+P-value                   0.010              0.004              0.537              0.003              0.006              0.786   
+---------------------------------------------------------------------------------------------------------------------------------
+Notes: * p\textless 0.10, ** p\textless 0.05, *** p\textless 0.01. Regressions use panel data over two follow-up periods.
+Outcome variables are a categorial frequency scale from 0 (never) to 6 (daily). Standard errors (reported in parentheses) 
+are clustered at the individual level. P-value compares WS Plus to WS Basic.
+All regressions control for location-fixed effects and baseline value of the outcome variable.
+Outcome variables are winsorized at the 5\% level.

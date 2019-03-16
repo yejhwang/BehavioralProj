@@ -1,0 +1,16 @@
+Second Follow Up: Goal Recall \label{tab:recall}
+---------------------------------------------------------------
+                                      (1)                (2)   
+                          Recall Likeli~d    Recall Accuracy   
+---------------------------------------------------------------
+Reminder                            0.215***           0.037   
+                                  (0.059)            (0.616)   
+---------------------------------------------------------------
+Observations                          253                140   
+R-squared                           0.130              0.100   
+Control Mean                        0.527              3.491   
+---------------------------------------------------------------
+Notes: * p\textless 0.10, ** p\textless 0.05, *** p\textless 0.01. Regressions use data from the second follow-up.
+Robust standard errors (reported in parentheses). Outcomes are likelihood of remembering the goal 
+number of applications, and the absolute difference between stated goal and recalled goal. 
+All regressions control for location-fixed effects. Outcome variables are winsorized at the 5\% level.

@@ -1,0 +1,22 @@
+Effects on Job Search Intensity \label{tab:search}
+------------------------------------------------------------------------------------------------
+                                 (1)                (2)                (3)                (4)   
+                        Search Hours       Search Hours       Applications       Applications   
+------------------------------------------------------------------------------------------------
+WS Basic                       0.225              0.016              0.163              0.124   
+                             (0.897)            (0.897)            (0.274)            (0.273)   
+
+WS Plus                       -0.243             -0.480              0.749***           0.681***
+                             (0.750)            (0.747)            (0.240)            (0.235)   
+
+Covariates                        No                Yes                 No                Yes   
+------------------------------------------------------------------------------------------------
+Observations                    1888               1886               1896               1895   
+R-squared                      0.083              0.092              0.308              0.318   
+Control Mean                  14.095             14.095              3.835              3.835   
+P-value                        0.595              0.573              0.054              0.062   
+------------------------------------------------------------------------------------------------
+Notes: * p\textless 0.10, ** p\textless 0.05, *** p\textless 0.01. Regressions use panel data over two follow-up periods.
+Standard errors (reported in parentheses) are clustered at the individual level. P-value compares WS Plus to WS Basic.
+All regressions control for location-fixed effects and baseline value of the outcome variable.
+Outcome variables are winsorized at the 5\% level.

@@ -1,0 +1,15 @@
+---
+title: "IntentionBehaviorGap"
+author: "Yejin Hwang"
+date: "3/7/2019"
+output: pdf_document
+---
+
+```{r}
+library(tidyverse)
+#library(haven) #haven is part of tidyverse
+data1 <- read_dta("./data/final_data1.dta")
+data2 <- read_dta("./data/final_data2.dta")
+data3 <- read_dta("./data/final_data3.dta")
+```
+

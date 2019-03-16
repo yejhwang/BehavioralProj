@@ -1,0 +1,22 @@
+Effects on Employment Outcomes \label{tab:employment}
+---------------------------------------------------------------------------------------------------------------------------------
+                            (1)                (2)                (3)                (4)                (5)                (6)   
+                      Responses          Responses             Offers             Offers           Employed           Employed   
+---------------------------------------------------------------------------------------------------------------------------------
+WS Basic                 -0.025             -0.027              0.023              0.022              0.021              0.019   
+                        (0.058)            (0.059)            (0.022)            (0.022)            (0.025)            (0.025)   
+
+WS Plus                   0.112**            0.102*             0.058***           0.061***           0.047**            0.049** 
+                        (0.053)            (0.053)            (0.020)            (0.020)            (0.020)            (0.021)   
+
+Covariates                   No                Yes                 No                Yes                 No                Yes   
+---------------------------------------------------------------------------------------------------------------------------------
+Observations               1895               1894               1882               1881               1971               1969   
+R-squared                 0.101              0.109              0.012              0.021              0.017              0.024   
+Control Mean              0.544              0.544              0.130              0.130              0.115              0.115   
+P-value                   0.027              0.036              0.126              0.099              0.321              0.249   
+---------------------------------------------------------------------------------------------------------------------------------
+Notes: * p\textless 0.10, ** p\textless 0.05, *** p\textless 0.01. Regressions use panel data over two follow-up periods.
+Standard errors (reported in parentheses) are clustered at the individual level. P-value compares WS Plus to WS Basic.
+All regressions control for location-fixed effects and baseline value of the outcome variable.
+Outcome variables are winsorized at the 5\% level.
