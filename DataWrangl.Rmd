@@ -7,7 +7,7 @@ output: pdf_document
 
 ```{r}
 library(tidyverse)
-#library(haven) #haven is part of tidyverse
+library(haven) #haven is part of tidyverse, but for some reason, this is needed.
 data1 <- read_dta("./data/final_data1.dta")
 data2 <- read_dta("./data/final_data2.dta")
 data3 <- read_dta("./data/final_data3.dta")
