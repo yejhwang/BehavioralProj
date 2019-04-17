@@ -9,6 +9,7 @@ output: pdf_document
 library(tidyverse)
 library(haven) #haven is part of tidyverse, but for some reason, this is needed.
 library(ggplot2)
+library(cowplot)
 data1 <- read_dta("./data/final_data1.dta")
 data2 <- read_dta("./data/final_data2.dta")
 data3 <- read_dta("./data/final_data3.dta")
@@ -24,9 +25,7 @@ Graphs:
 Figure 1. Intention-Behavior Gap: Difference at Baseline - density plot Hours and apps difference: Goal − Baseline
 
 ```{r}
-ggplot(data1, aes(hours_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Hours difference: Goal − Baseline", y = "Density")
-```
-
-```{r}
-ggplot(data1, aes(apps_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Apps difference: Goal − Baseline", y = "Density")
+hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Hours difference: Goal − Baseline", y = "Density") + ylim(0, 0.15)
+apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Apps difference: Goal − Baseline", y = "Density")
+plot_grid(hours_diff_density, apps_diff_density)
 ```
