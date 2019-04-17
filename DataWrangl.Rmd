@@ -8,6 +8,7 @@ output: pdf_document
 ```{r}
 library(tidyverse)
 library(haven) #haven is part of tidyverse, but for some reason, this is needed.
+library(ggplot2)
 data1 <- read_dta("./data/final_data1.dta")
 data2 <- read_dta("./data/final_data2.dta")
 data3 <- read_dta("./data/final_data3.dta")
@@ -22,19 +23,10 @@ Table 5—Effects on Frequency of Search-Channel Use
 Graphs:
 Figure 1. Intention-Behavior Gap: Difference at Baseline - density plot Hours and apps difference: Goal − Baseline
 
-What is the difference between data1-3?
-
-```{r data exploration for table 1 reproduction}
-str(data1)
+```{r}
+ggplot(data1, aes(hours_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Hours difference: Goal − Baseline", y = "Density")
 ```
 
 ```{r}
-str(data2)
+ggplot(data1, aes(apps_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Apps difference: Goal − Baseline", y = "Density")
 ```
-
-```{r}
-str(data3)
-#has a lot fewer vars
-```
-
-"Hello world."
