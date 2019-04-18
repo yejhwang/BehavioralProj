@@ -10,32 +10,11 @@ library(tidyverse)
 library(haven) #haven is part of tidyverse, but for some reason, this is needed.
 library(ggplot2)
 library(cowplot)
-#Run this: (if error is here^)
-#install.packages("cowplot")
 data1 <- read_dta("./data/final_data1.dta")
 data2 <- read_dta("./data/final_data2.dta")
 data3 <- read_dta("./data/final_data3.dta")
 ```
 
-<<<<<<< HEAD
-# Recreating Table 2 Test
-
-```{r}
-
-# Read in data file, assign to MyData
-MyData <- final_data1
-
-# Select variables in Table 2 from MyData, put in dataframe d
-vars <- c(34, 35, 36, 51, 52)
-d <- MyData[,vars]
- 
-# Compute means without missing (NA) values
-summary(d)
-sapply(d, mean, na.rm=TRUE)
-sapply(d, sd, na.rm=TRUE)
-
-
-=======
 Tables:
 summary stats: tables 1 and 2
 Table 3—Effects on Job Search Intensity. panel-data regression and se. outcome var winsorized=remove extreme values
@@ -49,5 +28,4 @@ Figure 1. Intention-Behavior Gap: Difference at Baseline - density plot Hours an
 hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Hours difference: Goal − Baseline", y = "Density") + ylim(0, 0.15)
 apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Apps difference: Goal − Baseline", y = "Density")
 plot_grid(hours_diff_density, apps_diff_density)
->>>>>>> 9095e35b2acf2f460dcb3a7c79127be07cab05ff
 ```
