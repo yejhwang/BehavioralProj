@@ -15,6 +15,27 @@ data2 <- read_dta("./data/final_data2.dta")
 data3 <- read_dta("./data/final_data3.dta")
 ```
 
+<<<<<<< HEAD
+# Recreating Table 2
+
+```{r}
+
+# Read in data file, assign to MyData
+MyData <- final_data1
+
+# Select variables in Table 2 from MyData, put in dataframe d
+vars <- c(34, 35, 36, 51, 52)
+d <- MyData[,vars]
+ 
+# Compute means without missing (NA) values
+summary(d)
+sapply(d, mean, na.rm=TRUE)
+sapply(d, sd, na.rm=TRUE)
+
+```
+
+=======
+>>>>>>> 336251e187997276430fa63a90970094411d8709
 Tables:
 ```{r table1}
 str(data1)
