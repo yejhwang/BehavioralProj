@@ -15,17 +15,12 @@ data2 <- read_dta("./data/final_data2.dta")
 data3 <- read_dta("./data/final_data3.dta")
 ```
 
-<<<<<<< HEAD
-# Recreating Table 2
-
-```{r}
-
-# Read in data file, assign to MyData
-MyData <- final_data1
+## Recreating Table 2
+```{r table2}
 
 # Select variables in Table 2 from MyData, put in dataframe d
 vars <- c(34, 35, 36, 51, 52)
-d <- MyData[,vars]
+d <- data1[,vars]
  
 # Compute means without missing (NA) values
 summary(d)
@@ -34,25 +29,28 @@ sapply(d, sd, na.rm=TRUE)
 
 ```
 
-=======
->>>>>>> 336251e187997276430fa63a90970094411d8709
+Note:
+windsorized: how they deal with wacky means / outliers
+i.e. using x9 to replace x10
+use windsor.mean function
+may be prewindsorized data
+
 Tables:
 ```{r table1}
-str(data1)
-controlGroup <- data1 %>% filter(treatment_group=="control") 
-controlGroup2<- controlGroup %>% select(age_yr, female_d, educ_yr, bs_b15a,moved_yesno_d,bs_b16)
+controlGroup <- data1 %>% filter(treatment_group=="control") %>% select(age_yr, female_d, educ_yr, bs_b15a,moved_yesno_d,bs_b1_ever_job_d,bs_b13_reserv_wage,bs_b14,bs_transport_cost,bs_b16,bs_c2,bs_c3)
+stargazer::stargazer(controlGroup, type = "text")
 ```
 
 summary stats: tables 1 and 2
-Table 3—Effects on Job Search Intensity. panel-data regression and se. outcome var winsorized=remove extreme values
-Table 4—Effects on Employment Outcomes. regression and se.
-Table 5—Effects on Frequency of Search-Channel Use
+Table 3-Effects on Job Search Intensity. panel-data regression and se. outcome var winsorized=remove extreme values
+Table 4-Effects on Employment Outcomes. regression and se.
+Table 5-Effects on Frequency of Search-Channel Use
 
 Graphs:
-Figure 1. Intention-Behavior Gap: Difference at Baseline - density plot Hours and apps difference: Goal − Baseline
+Figure 1. Intention-Behavior Gap: Difference at Baseline - density plot Hours and apps difference: Goal - Baseline
 
 ```{r figure1}
-hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Hours difference: Goal − Baseline", y = "Density") + ylim(0, 0.15)
-apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Apps difference: Goal − Baseline", y = "Density")
+hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Hours difference: Goal - Baseline", y = "Density") + ylim(0, 0.15)
+apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Apps difference: Goal - Baseline", y = "Density")
 plot_grid(hours_diff_density, apps_diff_density)
 ```
