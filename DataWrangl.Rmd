@@ -18,6 +18,12 @@ data3 <- read_dta("./data/final_data3.dta")
 ```
 
 Tables:
+```{r table1}
+str(data1)
+controlGroup <- data1 %>% filter(treatment_group=="control") 
+controlGroup2<- controlGroup %>% select(age_yr, female_d, educ_yr, bs_b15a,moved_yesno_d,bs_b16)
+```
+
 summary stats: tables 1 and 2
 Table 3—Effects on Job Search Intensity. panel-data regression and se. outcome var winsorized=remove extreme values
 Table 4—Effects on Employment Outcomes. regression and se.
@@ -26,7 +32,7 @@ Table 5—Effects on Frequency of Search-Channel Use
 Graphs:
 Figure 1. Intention-Behavior Gap: Difference at Baseline - density plot Hours and apps difference: Goal − Baseline
 
-```{r}
+```{r figure1}
 hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Hours difference: Goal − Baseline", y = "Density") + ylim(0, 0.15)
 apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Apps difference: Goal − Baseline", y = "Density")
 plot_grid(hours_diff_density, apps_diff_density)
