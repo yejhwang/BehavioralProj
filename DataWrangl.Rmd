@@ -29,3 +29,68 @@ hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) + geom_histo
 apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Apps difference: Goal − Baseline", y = "Density")
 plot_grid(hours_diff_density, apps_diff_density)
 ```
+
+Table 3:
+
+```{r}
+
+#TABLE3
+
+first <- lm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 + as.factor(location_f) + as.factor(round), data = final_data2)
+summary(first)
+
+second <- lm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 +
+               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+               as.factor(location_f) + as.factor(round), data = final_data2)
+summary(second)
+
+third <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 + as.factor(location_f) + as.factor(round), data = final_data2)
+summary(third)
+
+fourth <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
+               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+               as.factor(location_f) + as.factor(round), data = final_data2)
+summary(fourth)
+
+#use stargazer to exclude variables
+#na.rm=TRUE
+```
+
+Table 3:
+
+```{r}
+
+#TABLE4
+
+one <- lm(b4_t ~ ws_d + ws_plus_d + nomiss_bs_c4 + missd_bs_c4 + as.factor(location_f) + as.factor(round), data = final_data2)
+summary(one)
+
+two <- lm(b4_t ~ ws_d + ws_plus_d + nomiss_bs_c4 + missd_bs_c4 +
+            educ_yr + age_yr + female_d + bs_b15a +
+            lang_xhosa_d + lang_venda_d + lang_zulu_d +
+            as.factor(location_f) + as.factor(round), data = final_data2)
+summary(two)
+
+three <- lm(b6_t ~ ws_d + ws_plus_d + nomiss_bs_c6 + missd_bs_c6 + 
+              as.factor(location_f) + as.factor(round), data = final_data2)
+summary(three)
+  
+
+four <- lm(b6_t ~ ws_d + ws_plus_d + nomiss_bs_c6 + missd_bs_c6 +
+             educ_yr + age_yr + female_d + bs_b15a +
+             lang_xhosa_d + lang_venda_d + lang_zulu_d +
+             as.factor(location_f) + as.factor(round), data = final_data2)
+summary(four)
+
+
+five <- lm(a1_t ~ ws_d + ws_plus_d +
+             as.factor(location_f) + as.factor(round), data = final_data2)
+summary(five)
+  
+
+six <- lm(a1_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a +
+            lang_xhosa_d + lang_venda_d + lang_zulu_d +
+            as.factor(location_f) + as.factor(round), data = final_data2)
+summary(six)
+```
+
