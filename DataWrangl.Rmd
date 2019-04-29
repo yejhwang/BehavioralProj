@@ -161,7 +161,9 @@ m4_t3 <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
 summary(m4_t3)
 
 stargazer(m1_t3,m2_t3,m3_t3,m4_t3, keep=c("ws_d","ws_plus_d"), keep.stat = c("n","rsq"), type = "text", column.labels = c("Search Hours", "Search Hours", "Applications", "Applications"), covariate.labels =c("WS basic", "WS plus"), title="Table 3--EFFECTS ON JOB SEARCH INTENSITY",
-          add.lines = list(c("p-value", "0.7109","0.4656", "0.0002516 ***", "0.0008659 ***")))
+          add.lines = 
+            list(c("Covariates", "No", "Yes", "No", "Yes"),
+                  c("p-value", "0.7109","0.4656", "0.0002516 ***", "0.0008659 ***")))
 #na.rm=TRUE
 ```
 
@@ -212,7 +214,11 @@ m6_t4 <- lm(a1_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a +
             as.factor(location_f) + as.factor(round), data = final_data2)
 summary(m6_t4)
 
-stargazer(m1_t4,m2_t4,m3_t4,m4_t4, m5_t4, m6_t4, keep = c("ws_d","ws_plus_d"), keep.stat = c("n","rsq"), type = "text", column.labels = c("Responses", "Responses", "Offers", "Offers","Employed", "Employed"), covariate.labels =c("WS basic", "WS plus"), title="Table 4--EFFECTS ON EMPLOYMENT OUTCOMES", add.lines = list(c("p-value","0.01505*","0.02838*", "", "", "0.007805**", "0.005438**")))
+stargazer(m1_t4,m2_t4,m3_t4,m4_t4, m5_t4, m6_t4, keep = c("ws_d","ws_plus_d"), keep.stat = c("n","rsq"), type = "text", column.labels = c("Responses", "Responses", "Offers", "Offers","Employed", "Employed"), covariate.labels =c("WS basic", "WS plus"), title="Table 4--EFFECTS ON EMPLOYMENT OUTCOMES",
+          add.lines = 
+            list(c("Covariates", "No", "Yes", "No", "Yes", "No", "Yes"),
+          
+          c("p-value","0.01505*","0.02838*", "", "", "0.007805**", "0.005438**")))
 
 ```
 
