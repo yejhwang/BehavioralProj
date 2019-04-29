@@ -1,0 +1,111 @@
+---
+title: "zoya_code"
+author: "Zoya Azhar"
+date: "March 27, 2019"
+output: html_document
+---
+
+```{r}
+library(tidyverse)
+library(haven) #haven is part of tidyverse, but for some reason, this is needed.
+library(stargazer)
+library(car)
+```
+
+```{r}
+final_data1 <- read_dta("./data/final_data1.dta")
+final_data2 <- read_dta("./data/final_data2.dta")
+final_data3 <- read_dta("./data/final_data3.dta")
+```
+
+```{r table3_reproduction}
+
+#TABLE3
+
+m1_t3 <- lm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 + as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m1_t3)
+
+m2_t3 <- lm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 +
+               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+               as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m2_t3)
+
+m3_t3 <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 + as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m3_t3)
+
+m4_t3 <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
+               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+               as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m4_t3)
+
+stargazer(m1_t3,m2_t3,m3_t3,m4_t3, keep=c("ws_d","ws_plus_d"), keep.stat = c("n","rsq"), type = "text", column.labels = c("Search Hours", "Search Hours", "Applications", "Applications"), covariate.labels =c("WS basic", "WS plus"), title="Table 3--EFFECTS ON JOB SEARCH INTENSITY",
+          add.lines = list(c("p-value", "0.7109","0.4656", "0.0002516 ***", "0.0008659 ***")))
+#na.rm=TRUE
+```
+
+
+```{r table3_p-values}
+#get p-values and manually insert into stargazer command in previous chunk
+
+linearHypothesis(m1_t3,c("w_d"="ws_plus_d"))
+linearHypothesis(m2_t3,c("w_d"="ws_plus_d"))
+linearHypothesis(m3_t3,c("w_d"="ws_plus_d"))
+linearHypothesis(m4_t3,c("w_d"="ws_plus_d"))
+
+```
+
+
+```{r table4_reproduction}
+
+#TABLE4
+
+m1_t4 <- lm(b4_t ~ ws_d + ws_plus_d + nomiss_bs_c4 + missd_bs_c4 + as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m1_t4)
+
+m2_t4 <- lm(b4_t ~ ws_d + ws_plus_d + nomiss_bs_c4 + missd_bs_c4 +
+            educ_yr + age_yr + female_d + bs_b15a +
+            lang_xhosa_d + lang_venda_d + lang_zulu_d +
+            as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m2_t4)
+
+m3_t4 <- lm(b6_t ~ ws_d + ws_plus_d + nomiss_bs_c6 + missd_bs_c6 + 
+              as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m3_t4)
+  
+
+m4_t4 <- lm(b6_t ~ ws_d + ws_plus_d + nomiss_bs_c6 + missd_bs_c6 +
+             educ_yr + age_yr + female_d + bs_b15a +
+             lang_xhosa_d + lang_venda_d + lang_zulu_d +
+             as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m4_t4)
+
+
+m5_t4 <- lm(a1_t ~ ws_d + ws_plus_d +
+             as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m5_t4)
+  
+
+m6_t4 <- lm(a1_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a +
+            lang_xhosa_d + lang_venda_d + lang_zulu_d +
+            as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m6_t4)
+
+stargazer(m1_t4,m2_t4,m3_t4,m4_t4, m5_t4, m6_t4, keep = c("ws_d","ws_plus_d"), keep.stat = c("n","rsq"), type = "text", column.labels = c("Responses", "Responses", "Offers", "Offers","Employed", "Employed"), covariate.labels =c("WS basic", "WS plus"), title="Table 4--EFFECTS ON EMPLOYMENT OUTCOMES", add.lines = list(c("p-value","0.01505*","0.02838*", "", "", "0.007805**", "0.005438**")))
+
+```
+
+```{r table4_p-values, eval = FALSE}
+#get p-values and manually insert into stargazer command in previous chunk
+
+linearHypothesis(m1_t4,c("ws_d"="ws_plus_d"))
+linearHypothesis(m2_t4,c("ws_d"="ws_plus_d"))
+linearHypothesis(m3_t4,c("ws_d"="ws_plus_d")) #error
+linearHypothesis(m4_t4,c("ws_d"="ws_plus_d")) #same error
+linearHypothesis(m5_t4,c("ws_d"="ws_plus_d"))
+linearHypothesis(m6_t4,c("ws_d"="ws_plus_d"))
+```
+
+
+-need to check why p-values not same and not same significance level
+-figure out error in table-4 p-value computation
+-need to check variable names not clashing with Kelly
