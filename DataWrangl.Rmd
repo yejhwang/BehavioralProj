@@ -11,6 +11,7 @@ library(haven) #haven is part of tidyverse, but for some reason, this is needed.
 library(ggplot2)
 library(cowplot)
 library(stargazer)
+library(car)
 data1 <- read_dta("./data/final_data1.dta")
 data2 <- read_dta("./data/final_data2.dta")
 data3 <- read_dta("./data/final_data3.dta")
@@ -104,7 +105,6 @@ stargazer(m1_t5, m2_t5, m3_t5, m4_t5, m5_t5, m6_t5, colnames = FALSE, column.lab
 
 ```{r}
 #summary mod
-library(car)
 linearHypothesis(m1_t5, c("ws_d = ws_plus_d"))
 ```
 
@@ -132,4 +132,64 @@ linearHypothesis(m6_t5, c("ws_d = ws_plus_d"), singular.ok = TRUE)
 
 ```
 
+Table 3:
 
+```{r}
+
+#TABLE3
+
+first <- lm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 + as.factor(location_f) + as.factor(round), data = final_data2)
+summary(first)
+
+second <- lm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 +
+               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+               as.factor(location_f) + as.factor(round), data = final_data2)
+summary(second)
+
+third <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 + as.factor(location_f) + as.factor(round), data = final_data2)
+summary(third)
+
+fourth <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
+               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+               as.factor(location_f) + as.factor(round), data = final_data2)
+summary(fourth)
+
+#use stargazer to exclude variables
+#na.rm=TRUE
+```
+
+```{r}
+
+#TABLE4
+
+one <- lm(b4_t ~ ws_d + ws_plus_d + nomiss_bs_c4 + missd_bs_c4 + as.factor(location_f) + as.factor(round), data = final_data2)
+summary(one)
+
+two <- lm(b4_t ~ ws_d + ws_plus_d + nomiss_bs_c4 + missd_bs_c4 +
+            educ_yr + age_yr + female_d + bs_b15a +
+            lang_xhosa_d + lang_venda_d + lang_zulu_d +
+            as.factor(location_f) + as.factor(round), data = final_data2)
+summary(two)
+
+three <- lm(b6_t ~ ws_d + ws_plus_d + nomiss_bs_c6 + missd_bs_c6 + 
+              as.factor(location_f) + as.factor(round), data = final_data2)
+summary(three)
+  
+
+four <- lm(b6_t ~ ws_d + ws_plus_d + nomiss_bs_c6 + missd_bs_c6 +
+             educ_yr + age_yr + female_d + bs_b15a +
+             lang_xhosa_d + lang_venda_d + lang_zulu_d +
+             as.factor(location_f) + as.factor(round), data = final_data2)
+summary(four)
+
+
+five <- lm(a1_t ~ ws_d + ws_plus_d +
+             as.factor(location_f) + as.factor(round), data = final_data2)
+summary(five)
+  
+
+six <- lm(a1_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a +
+            lang_xhosa_d + lang_venda_d + lang_zulu_d +
+            as.factor(location_f) + as.factor(round), data = final_data2)
+summary(six)
+```
