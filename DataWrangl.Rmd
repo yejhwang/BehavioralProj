@@ -10,6 +10,7 @@ library(tidyverse)
 library(haven) #haven is part of tidyverse, but for some reason, this is needed.
 library(ggplot2)
 library(cowplot)
+library(stargazer)
 data1 <- read_dta("./data/final_data1.dta")
 data2 <- read_dta("./data/final_data2.dta")
 data3 <- read_dta("./data/final_data3.dta")
@@ -17,6 +18,8 @@ data3 <- read_dta("./data/final_data3.dta")
 
 ## Recreating Table 2
 ```{r table2}
+# Read in data file, assign to MyData
+MyData <- data1
 
 # Select variables in Table 2 from MyData, put in dataframe d
 vars <- c(34, 35, 36, 51, 52)
@@ -26,8 +29,28 @@ d <- data1[,vars]
 summary(d)
 sapply(d, mean, na.rm=TRUE)
 sapply(d, sd, na.rm=TRUE)
-
 ```
+
+```{r}
+stargazer(data.frame(d), title = "Table 2—Action-Plan Descriptives", omit.summary.stat = c("min", "max", "p25", "p75"), type="text")
+```
+
+```{r}
+goal_opport <- data1$goal_opport[!is.na(data1$goal_opport)]
+goal_submit <- data1$goal_submit[!is.na(data1$goal_submit)]
+goal_hours <- data1$goal_hours[!is.na(data1$goal_hours)]
+activity_days <- data1$activity_days[!is.na(data1$activity_days)]
+APcomplete <- data1$APcomplete[!is.na(data1$APcomplete)]
+
+rownames <- c("Completed AP", "Activity days", "Goal: Job search hours", "Goal: Opportunities to identify", "Goal: Applications to submit")
+observations <- c(length(APcomplete), length(activity_days), length(goal_hours), length(goal_opport), length(goal_submit))
+mean <- c(mean(APcomplete), mean(activity_days), mean(goal_hours), mean(goal_opport), mean(goal_submit))
+sd <- c(sd(APcomplete), sd(activity_days), sd(goal_hours), sd(goal_opport), sd(goal_submit))
+
+table2_brute_force <- data.frame(rownames, observations, mean, sd)
+table2_brute_force
+```
+
 
 Note:
 windsorized: how they deal with wacky means / outliers
@@ -35,10 +58,11 @@ i.e. using x9 to replace x10
 use windsor.mean function
 may be prewindsorized data
 
+
 Tables:
 ```{r table1}
-controlGroup <- data1 %>% filter(treatment_group=="control") %>% select(age_yr, female_d, educ_yr, bs_b15a,moved_yesno_d,bs_b1_ever_job_d,bs_b13_reserv_wage,bs_b14,bs_transport_cost,bs_b16,bs_c2,bs_c3)
-stargazer::stargazer(controlGroup, type = "text")
+controlGroup <- data1 %>% select(age_yr, female_d, educ_yr, bs_b15a,moved_yesno_d,bs_b1_ever_job_d,bs_b13_reserv_wage,bs_b14,bs_transport_cost,bs_b16,bs_c2,bs_c3)
+stargazer::stargazer(data.frame(controlGroup), summary.stat = c("n", "mean", "median", "sd"), type = "text", title = "Table 1—Sample Characteristics")
 ```
 
 summary stats: tables 1 and 2
@@ -53,4 +77,59 @@ Figure 1. Intention-Behavior Gap: Difference at Baseline - density plot Hours an
 hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Hours difference: Goal - Baseline", y = "Density") + ylim(0, 0.15)
 apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Apps difference: Goal - Baseline", y = "Density")
 plot_grid(hours_diff_density, apps_diff_density)
+ggsave("figure1.jpg")
 ```
+
+Table 5
+```{r}
+#data2
+#b1_1_t: Empl. agency
+#b1_2_t: dropped cv
+#b1_3_t: placed ad
+#b1_4_t: answered ad
+#b1_5_t: searched online
+#b1_6_t: Fam./Friends
+#b4_t: employer responses
+
+m1_t5 <- lm(b1_1_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_1 + missd_bs_c1_1 + as.factor(location_f) + as.factor(round), data = data2)
+m2_t5 <- lm(b1_2_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_2 + missd_bs_c1_2 + as.factor(location_f) + as.factor(round), data = data2)
+m3_t5 <- lm(b1_3_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_3 + missd_bs_c1_3 + as.factor(location_f) + as.factor(round), data = data2)
+m4_t5 <- lm(b1_4_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_4 + missd_bs_c1_4 + as.factor(location_f) + as.factor(round), data = data2)
+m5_t5 <- lm(b1_5_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_5 + missd_bs_c1_5 + as.factor(location_f) + as.factor(round), data = data2)
+m6_t5 <- lm(b1_6_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_6 + missd_bs_c1_6 + as.factor(location_f) + as.factor(round), data = data2)
+stargazer(m1_t5, m2_t5, m3_t5, m4_t5, m5_t5, m6_t5, colnames = FALSE, column.labels = c("Empl. agency", "Dropped CV", "Placed ad", "Answered ad", "Searched online", "Fam./friends"), keep = c("ws_d", "ws_plus_d"), keep.stat =c("n","rsq"), type = "text", supress.errors = TRUE, title="Table 5—Effects on Frequency of Search-Channel Use", add.lines = list(c("p-value", "0.0047**", "0.001101**", "0.4906", "0.001291**", "0.0009031***", "0.7577")))
+
+#stargazer type = latex
+```
+
+```{r}
+#summary mod
+library(car)
+linearHypothesis(m1_t5, c("ws_d = ws_plus_d"))
+```
+
+```{r}
+linearHypothesis(m2_t5, c("ws_d = ws_plus_d"))
+```
+
+```{r}
+linearHypothesis(m3_t5, c("ws_d = ws_plus_d"))
+```
+
+```{r}
+linearHypothesis(m4_t5, c("ws_d = ws_plus_d"))
+```
+
+```{r}
+linearHypothesis(m5_t5, c("ws_d = ws_plus_d"), singular.ok = TRUE)
+```
+
+```{r}
+linearHypothesis(m6_t5, c("ws_d = ws_plus_d"), singular.ok = TRUE)
+```
+
+```{r}
+
+```
+
+
