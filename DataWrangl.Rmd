@@ -12,6 +12,7 @@ library(ggplot2)
 library(cowplot)
 library(stargazer)
 library(car)
+library(miceadds)
 data1 <- read_dta("./data/final_data1.dta")
 data2 <- read_dta("./data/final_data2.dta")
 data3 <- read_dta("./data/final_data3.dta")
@@ -58,6 +59,13 @@ windsorized: how they deal with wacky means / outliers
 i.e. using x9 to replace x10
 use windsor.mean function
 may be prewindsorized data
+
+```{r}
+controlGroup <- data1 %>% select(age_yr, female_d, educ_yr)
+names(controlGroup) <- c("Age", "Female", "Education (in years)")
+stargazer::stargazer(data.frame(controlGroup), summary.stat = c("n", "mean", "median", "sd"), type = "text", title = "Table 1—Sample Characteristics")
+```
+
 
 
 Tables:
@@ -168,6 +176,39 @@ stargazer(m1_t3,m2_t3,m3_t3,m4_t3, keep=c("ws_d","ws_plus_d"), keep.stat = c("n"
 ```
 
 
+
+```{r table3_reproduction}
+library(multiwayvcov)
+#TABLE3
+
+m1_t3cluster <- lm.cluster(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 + as.factor(location_f) + as.factor(round), data = final_data2, cluster = "id")
+summary(m1_t3cluster)
+
+
+m2_t3 <- lm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 +
+               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+               as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m2_t3)
+
+m3_t3 <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 + as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m3_t3)
+
+m4_t3 <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
+               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+               as.factor(location_f) + as.factor(round), data = final_data2)
+summary(m4_t3)
+
+library(knitr)
+kable(m1_t3cluster$vcov[2])
+
+stargazer(m1_t3cluster$lm_res[1],m2_t3,m3_t3,m4_t3, keep=c("ws_d","ws_plus_d"), keep.stat = c("n","rsq"), type = "text", column.labels = c("Search Hours", "Search Hours", "Applications", "Applications"), covariate.labels =c("WS basic", "WS plus"), title="Table 3--EFFECTS ON JOB SEARCH INTENSITY",
+          add.lines = 
+            list(c("Covariates", "No", "Yes", "No", "Yes"),
+                  c("p-value", "0.7109","0.4656", "0.0002516 ***", "0.0008659 ***")))
+#na.rm=TRUE
+```
+
+
 ```{r table3_p-values}
 #get p-values and manually insert into stargazer command in previous chunk
 
@@ -227,7 +268,7 @@ stargazer(m1_t4,m2_t4,m3_t4,m4_t4, m5_t4, m6_t4, keep = c("ws_d","ws_plus_d"), k
 
 linearHypothesis(m1_t4,c("ws_d"="ws_plus_d"))
 linearHypothesis(m2_t4,c("ws_d"="ws_plus_d"))
-linearHypothesis(m3_t4,c("ws_d"="ws_plus_d")) #error
+linearHypothesis(m3_t4,c("ws_d"="ws_plus_d"), singular.ok = TRUE) #error
 linearHypothesis(m4_t4,c("ws_d"="ws_plus_d")) #same error
 linearHypothesis(m5_t4,c("ws_d"="ws_plus_d"))
 linearHypothesis(m6_t4,c("ws_d"="ws_plus_d"))
