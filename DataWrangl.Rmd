@@ -12,7 +12,11 @@ library(ggplot2)
 library(cowplot)
 library(stargazer)
 library(car)
-library(miceadds)
+library(miceadds) #in case we need it for lm.cluster
+library(multiwayvcov) #in case we need it for lm.cluster
+library(knitr) #to enabel kable for testing. 
+library(lfe) #To use the 'felm' command to run fixed effect linear models with clusterin
+
 data1 <- read_dta("./data/final_data1.dta")
 data2 <- read_dta("./data/final_data2.dta")
 data3 <- read_dta("./data/final_data3.dta")
@@ -61,9 +65,14 @@ use windsor.mean function
 may be prewindsorized data
 
 ```{r}
+#SDH: I added some line breaks below in the call to stargazer, 
+#...just a recommendation to make your code more readable -- consider doing it in the later ones too. 
 controlGroup <- data1 %>% select(age_yr, female_d, educ_yr)
 names(controlGroup) <- c("Age", "Female", "Education (in years)")
-stargazer::stargazer(data.frame(controlGroup), summary.stat = c("n", "mean", "median", "sd"), type = "text", title = "Table 1—Sample Characteristics")
+stargazer::stargazer(data.frame(controlGroup), 
+                     summary.stat = c("n", "mean", "median", "sd"), 
+                     type = "text", 
+                     title = "Table 1—Sample Characteristics")
 ```
 
 
@@ -178,7 +187,7 @@ stargazer(m1_t3,m2_t3,m3_t3,m4_t3, keep=c("ws_d","ws_plus_d"), keep.stat = c("n"
 
 
 ```{r table3_reproduction}
-library(multiwayvcov)
+
 #TABLE3
 
 m1_t3cluster <- lm.cluster(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 + as.factor(location_f) + as.factor(round), data = final_data2, cluster = "id")
@@ -198,8 +207,8 @@ m4_t3 <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
                as.factor(location_f) + as.factor(round), data = final_data2)
 summary(m4_t3)
 
-library(knitr)
-kable(m1_t3cluster$vcov[2])
+
+#kable(m1_t3cluster$vcov[2])
 
 stargazer(m1_t3cluster$lm_res[1],m2_t3,m3_t3,m4_t3, keep=c("ws_d","ws_plus_d"), keep.stat = c("n","rsq"), type = "text", column.labels = c("Search Hours", "Search Hours", "Applications", "Applications"), covariate.labels =c("WS basic", "WS plus"), title="Table 3--EFFECTS ON JOB SEARCH INTENSITY",
           add.lines = 
@@ -207,6 +216,55 @@ stargazer(m1_t3cluster$lm_res[1],m2_t3,m3_t3,m4_t3, keep=c("ws_d","ws_plus_d"), 
                   c("p-value", "0.7109","0.4656", "0.0002516 ***", "0.0008659 ***")))
 #na.rm=TRUE
 ```
+
+
+
+```{r simon_testing}
+
+#Notice here I'm using 'felm' instead of 'lm' or 'lm.cluster'. 
+#felm apparently reports a better structured object that can be more easily passed to stargazer (see below)
+#I did get some errors, but it seems to work as specified. 
+m1t3c <- felm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 +
+                      as.factor(location_f) + as.factor(round) |0|0| id, 
+                    data = final_data2)
+#summary(m1t3c)
+m2t3c <- felm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 +
+               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + 
+                 lang_venda_d + lang_zulu_d +
+               as.factor(location_f) + as.factor(round)  |0|0| id, 
+               data = final_data2)
+m3t3c <- felm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
+                      as.factor(location_f) + as.factor(round)  |0|0| id, 
+                    data = final_data2)
+m4t3c <- felm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
+               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + 
+                 lang_venda_d + lang_zulu_d +
+               as.factor(location_f) + as.factor(round)  |0|0| id, 
+               data = final_data2)
+summary(m2t3c)
+
+# m1t3c <- lm.cluster(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 +
+#                       as.factor(location_f) + as.factor(round), 
+#                     data = final_data2, cluster = "id")
+# m2t3c <- lm.cluster(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 +
+#                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + 
+#                  lang_venda_d + lang_zulu_d +
+#                as.factor(location_f) + as.factor(round), 
+#                data = final_data2, cluster = "id")
+# m3t3c <- lm.cluster(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
+#                       as.factor(location_f) + as.factor(round), 
+#                     data = final_data2, cluster = "id")
+# m4t3c <- lm.cluster(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
+#                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + 
+#                  lang_venda_d + lang_zulu_d +
+#                as.factor(location_f) + as.factor(round), 
+#                data = final_data2, cluster = "id")
+
+stargazer(m1t3c, m2t3c, m3t3c, m4t3c, type="text")
+#SDH: I'm not too sure why it's throwing out the error it is. 
+```
+
+
 
 
 ```{r table3_p-values}
