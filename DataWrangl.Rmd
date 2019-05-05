@@ -79,54 +79,60 @@ ggsave("figure1.jpg")
 
 ##Table 5
 ```{r create models, stargazer table}
-#data2
-#b1_1_t: Empl. agency
-#b1_2_t: dropped cv
-#b1_3_t: placed ad
-#b1_4_t: answered ad
-#b1_5_t: searched online
-#b1_6_t: Fam./Friends
-#b4_t: employer responses
+#Select only relevant data
+t5_data <- data2 %>% select(b1_1_t, b1_2_t, b1_3_t, b1_4_t, b1_5_t, b1_6_t, ws_d, ws_plus_d, educ_yr, age_yr, female_d, bs_b15a, lang_xhosa_d, lang_venda_d, lang_zulu_d, nomiss_bs_c1_1, nomiss_bs_c1_2, nomiss_bs_c1_3, nomiss_bs_c1_4, nomiss_bs_c1_5, nomiss_bs_c1_6, missd_bs_c1_1, missd_bs_c1_2, missd_bs_c1_3, missd_bs_c1_4, location_f, round, id)
 
-m1_t5 <- felm(b1_1_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_1 + missd_bs_c1_1 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2)
-m2_t5 <- felm(b1_2_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_2 + missd_bs_c1_2 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2)
-m3_t5 <- felm(b1_3_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_3 + missd_bs_c1_3 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2)
-m4_t5 <- felm(b1_4_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_4 + missd_bs_c1_4 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2)
-m5_t5 <- felm(b1_5_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_5 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2) #missd_bs_c1_5 removed because it generated a coefficent of NaN which made the linearHypothesis test not work. my numbers here still match the paper's though.
-m6_t5 <- felm(b1_6_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_6 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2) #missd_bs_c1_6 removed for same reason
+#Rename variables that will appear in table
+colnames(t5_data)[colnames(t5_data) == "b1_1_t"] <- "Empl.agency"
+colnames(t5_data)[colnames(t5_data) == "b1_2_t"] <- "Dropped_CV"
+colnames(t5_data)[colnames(t5_data) == "b1_3_t"] <- "Placed_ad"
+colnames(t5_data)[colnames(t5_data) == "b1_4_t"] <- "Answered_ad"
+colnames(t5_data)[colnames(t5_data) == "b1_5_t"] <- "Searched_online"
+colnames(t5_data)[colnames(t5_data) == "b1_6_t"] <- "Fam.friends"
+colnames(t5_data)[colnames(t5_data) == "ws_d"] <- "WS_basic"
+colnames(t5_data)[colnames(t5_data) == "ws_plus_d"] <- "WS_plus"
+
+#Build models
+m1_t5 <- felm(Empl.agency ~ WS_basic + WS_plus + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_1 + missd_bs_c1_1 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t5_data)
+m2_t5 <- felm(Dropped_CV ~ WS_basic + WS_plus + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_2 + missd_bs_c1_2 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t5_data)
+m3_t5 <- felm(Placed_ad ~ WS_basic + WS_plus + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_3 + missd_bs_c1_3 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t5_data)
+m4_t5 <- felm(Answered_ad ~ WS_basic + WS_plus + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_4 + missd_bs_c1_4 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t5_data)
+m5_t5 <- felm(Searched_online ~ WS_basic + WS_plus + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_5 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t5_data) #missd_bs_c1_5 removed because it generated a coefficent of NaN which made the linearHypothesis test not work. my numbers here still match the paper's though.
+m6_t5 <- felm(Fam.friends ~ WS_basic + WS_plus + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_6 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t5_data) #missd_bs_c1_6 removed for same reason
+
+#Generate table
 stargazer(m1_t5, m2_t5, m3_t5, m4_t5, m5_t5, m6_t5,
-          column.labels = c("Empl. agency", "Dropped CV", "Placed ad", "Answered ad", "Searched online", "Fam./friends"),
-          keep = c("ws_d", "ws_plus_d"), keep.stat =c("n","rsq"),
+          keep = c("WS_basic", "WS_plus"), keep.stat =c("n","rsq"),
           type = "text",
           title="Table 5—Effects on Frequency of Search-Channel Use",
-          add.lines = list(c("p-value", "0.009711**", "0.003649**", "0.5369", "0.003324**", "0.006298 **", "0.786")))
+          add.lines = list(c("p-value", "0.009711**", "0.003649**", "0.5369", "0.003324**", "0.006298 **", "0.786"))) #from linear hypothesis tests below
 
 #stargazer type = latex
 ```
 
 ###Linear hypothesis tests to generate p-values in table
 ```{r}
-linearHypothesis(m1_t5, c("ws_d = ws_plus_d"))
+linearHypothesis(m1_t5, c("WS_basic = WS_plus"))
 ```
 
 ```{r}
-linearHypothesis(m2_t5, c("ws_d = ws_plus_d"))
+linearHypothesis(m2_t5, c("WS_basic = WS_plus"))
 ```
 
 ```{r}
-linearHypothesis(m3_t5, c("ws_d = ws_plus_d"))
+linearHypothesis(m3_t5, c("WS_basic = WS_plus"))
 ```
 
 ```{r}
-linearHypothesis(m4_t5, c("ws_d = ws_plus_d"))
+linearHypothesis(m4_t5, c("WS_basic = WS_plus"))
 ```
 
 ```{r}
-linearHypothesis(m5_t5, c("ws_d = ws_plus_d"), singular.ok = TRUE)
+linearHypothesis(m5_t5, c("WS_basic = WS_plus"), singular.ok = TRUE)
 ```
 
 ```{r}
-linearHypothesis(m6_t5, c("ws_d = ws_plus_d"), singular.ok = TRUE)
+linearHypothesis(m6_t5, c("WS_basic = WS_plus"), singular.ok = TRUE)
 ```
 
 
