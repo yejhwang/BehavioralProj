@@ -1,11 +1,23 @@
 ---
-title: "IntentionBehaviorGap"
-author: "Yejin Hwang"
-date: "3/7/2019"
+title: "Intention Behavior Gap Reproduction"
+author: "Yejin Hwang, Zoya Azhar, Emeline Cox, Kelly Pien"
+date: "5/4/2019"
 output: pdf_document
 ---
+##Contents
+Summary Stats:
+Table 1
+Table 2
 
-```{r}
+Regression Models Output Tables:
+Table 3-Effects on Job Search Intensity. panel-data regression and se. outcome var winsorized=remove extreme values
+Table 4-Effects on Employment Outcomes. regression and se.
+Table 5-Effects on Frequency of Search-Channel Use
+
+Graphs:
+Figure 1: Intention-Behavior Gap: Difference at Baseline - density plot Hours and apps difference: Goal - Baseline
+
+```{r load packages & read in data}
 library(tidyverse)
 library(haven) #haven is part of tidyverse, but for some reason, this is needed.
 library(ggplot2)
@@ -21,16 +33,13 @@ data3 <- read_dta("./data/final_data3.dta")
 ```
 
 ## Recreating Table 2
-```{r table2}
-# Read in data file, assign to MyData
-MyData <- data1
-
-# Select variables in Table 2 from MyData, put in dataframe d
+```{r select relevant variables}
+# Select variables in Table 2 from data1, put in dataframe d
 vars <- c(34, 35, 36, 51, 52)
 d <- data1[,vars]
 ```
 
-```{r}
+```{r rename vars & create table}
 names(d) <- c("Goal: Opportunities to identify", "Goal: Applications to submit", "Goal: Job search hours", "Activity days", "Completed AP")
 stargazer(data.frame(d),
           title = "Table 2—Action-Plan Descriptives",
@@ -54,13 +63,7 @@ stargazer::stargazer(data.frame(controlGroup),
                      title = "Table 1—Sample Characteristics")
 ```
 
-summary stats: tables 1 and 2
-Table 3-Effects on Job Search Intensity. panel-data regression and se. outcome var winsorized=remove extreme values
-Table 4-Effects on Employment Outcomes. regression and se.
-Table 5-Effects on Frequency of Search-Channel Use
-
-Graphs:
-Figure 1. Intention-Behavior Gap: Difference at Baseline - density plot Hours and apps difference: Goal - Baseline
+#Figure 1.
 
 ```{r figure1}
 hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) +
@@ -74,8 +77,8 @@ plot_grid(hours_diff_density, apps_diff_density)
 ggsave("figure1.jpg")
 ```
 
-Table 5
-```{r}
+##Table 5
+```{r create models, stargazer table}
 #data2
 #b1_1_t: Empl. agency
 #b1_2_t: dropped cv
@@ -92,19 +95,17 @@ m4_t5 <- felm(b1_4_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a 
 m5_t5 <- felm(b1_5_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_5 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2) #missd_bs_c1_5 removed because it generated a coefficent of NaN which made the linearHypothesis test not work. my numbers here still match the paper's though.
 m6_t5 <- felm(b1_6_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_6 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2) #missd_bs_c1_6 removed for same reason
 stargazer(m1_t5, m2_t5, m3_t5, m4_t5, m5_t5, m6_t5,
-          colnames = FALSE,
           column.labels = c("Empl. agency", "Dropped CV", "Placed ad", "Answered ad", "Searched online", "Fam./friends"),
           keep = c("ws_d", "ws_plus_d"), keep.stat =c("n","rsq"),
           type = "text",
-          supress.errors = TRUE,
           title="Table 5—Effects on Frequency of Search-Channel Use",
           add.lines = list(c("p-value", "0.009711**", "0.003649**", "0.5369", "0.003324**", "0.006298 **", "0.786")))
 
 #stargazer type = latex
 ```
 
+###Linear hypothesis tests to generate p-values in table
 ```{r}
-#summary mod
 linearHypothesis(m1_t5, c("ws_d = ws_plus_d"))
 ```
 
@@ -129,7 +130,7 @@ linearHypothesis(m6_t5, c("ws_d = ws_plus_d"), singular.ok = TRUE)
 ```
 
 
-Table 3:
+#Table 3
 
 ```{r}
 final_data1 <- read_dta("./data/final_data1.dta")
@@ -137,9 +138,7 @@ final_data2 <- read_dta("./data/final_data2.dta")
 final_data3 <- read_dta("./data/final_data3.dta")
 ```
 
-```{r table3_reproduction}
-
-#TABLE3
+```{r table3 reproduction}
 
 m1_t3 <- lm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 + as.factor(location_f) + as.factor(round), data = final_data2)
 summary(m1_t3)
@@ -257,10 +256,10 @@ linearHypothesis(m4_t3,c("w_d"="ws_plus_d"))
 
 ```
 
-
+#Table 4
 ```{r table4_reproduction}
 
-#TABLE4
+
 
 m1_t4 <- lm(b4_t ~ ws_d + ws_plus_d + nomiss_bs_c4 + missd_bs_c4 + as.factor(location_f) + as.factor(round), data = final_data2)
 summary(m1_t4)
