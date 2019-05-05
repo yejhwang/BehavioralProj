@@ -28,33 +28,15 @@ MyData <- data1
 # Select variables in Table 2 from MyData, put in dataframe d
 vars <- c(34, 35, 36, 51, 52)
 d <- data1[,vars]
- 
-# Compute means without missing (NA) values
-summary(d)
-sapply(d, mean, na.rm=TRUE)
-sapply(d, sd, na.rm=TRUE)
 ```
 
 ```{r}
-stargazer(data.frame(d), title = "Table 2—Action-Plan Descriptives", omit.summary.stat = c("min", "max", "p25", "p75"), type="text")
+names(d) <- c("Goal: Opportunities to identify", "Goal: Applications to submit", "Goal: Job search hours", "Activity days", "Completed AP")
+stargazer(data.frame(d),
+          title = "Table 2—Action-Plan Descriptives",
+          omit.summary.stat = c("min", "max", "p25", "p75"),
+          type="text")
 ```
-
-```{r}
-goal_opport <- data1$goal_opport[!is.na(data1$goal_opport)]
-goal_submit <- data1$goal_submit[!is.na(data1$goal_submit)]
-goal_hours <- data1$goal_hours[!is.na(data1$goal_hours)]
-activity_days <- data1$activity_days[!is.na(data1$activity_days)]
-APcomplete <- data1$APcomplete[!is.na(data1$APcomplete)]
-
-rownames <- c("Completed AP", "Activity days", "Goal: Job search hours", "Goal: Opportunities to identify", "Goal: Applications to submit")
-observations <- c(length(APcomplete), length(activity_days), length(goal_hours), length(goal_opport), length(goal_submit))
-mean <- c(mean(APcomplete), mean(activity_days), mean(goal_hours), mean(goal_opport), mean(goal_submit))
-sd <- c(sd(APcomplete), sd(activity_days), sd(goal_hours), sd(goal_opport), sd(goal_submit))
-
-table2_brute_force <- data.frame(rownames, observations, mean, sd)
-table2_brute_force
-```
-
 
 Note:
 windsorized: how they deal with wacky means / outliers
@@ -62,23 +44,14 @@ i.e. using x9 to replace x10
 use windsor.mean function
 may be prewindsorized data
 
-```{r}
-#SDH: I added some line breaks below in the call to stargazer, 
-#...just a recommendation to make your code more readable -- consider doing it in the later ones too. 
-controlGroup <- data1 %>% select(age_yr, female_d, educ_yr)
-names(controlGroup) <- c("Age", "Female", "Education (in years)")
-stargazer::stargazer(data.frame(controlGroup), 
-                     summary.stat = c("n", "mean", "median", "sd"), 
-                     type = "text", 
-                     title = "Table 1—Sample Characteristics")
-```
-
-
-
-Tables:
+##Recreating Table 1
 ```{r table1}
-controlGroup <- data1 %>% select(age_yr, female_d, educ_yr, bs_b15a,moved_yesno_d,bs_b1_ever_job_d,bs_b13_reserv_wage,bs_b14,bs_transport_cost,bs_b16,bs_c2,bs_c3)
-stargazer::stargazer(data.frame(controlGroup), summary.stat = c("n", "mean", "median", "sd"), type = "text", title = "Table 1—Sample Characteristics")
+controlGroup <- data1 %>% select(age_yr, female_d, educ_yr, bs_b15a, moved_yesno_d, bs_b1_ever_job_d, bs_b13_reserv_wage, bs_b14, bs_transport_cost, bs_b16, bs_c2, bs_c3)
+names(controlGroup) <- c("Age", "Female", "Years of schooling", "Household size", "Moved to Johannesburg", "Ever employed", "Reservation wage", "Fair wage", "Job search transport cost", "Number employed friends", "Job search hours (week)", "Job applications (month)")
+stargazer::stargazer(data.frame(controlGroup),
+                     summary.stat = c("n", "mean", "median", "sd"),
+                     type = "text",
+                     title = "Table 1—Sample Characteristics")
 ```
 
 summary stats: tables 1 and 2
