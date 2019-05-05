@@ -12,9 +12,7 @@ library(ggplot2)
 library(cowplot)
 library(stargazer)
 library(car)
-library(miceadds) #in case we need it for lm.cluster
-library(multiwayvcov) #in case we need it for lm.cluster
-library(knitr) #to enabel kable for testing. 
+library(knitr) #to enable kable for testing. 
 library(lfe) #To use the 'felm' command to run fixed effect linear models with clusterin
 
 data1 <- read_dta("./data/final_data1.dta")
@@ -92,8 +90,13 @@ Graphs:
 Figure 1. Intention-Behavior Gap: Difference at Baseline - density plot Hours and apps difference: Goal - Baseline
 
 ```{r figure1}
-hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Hours difference: Goal - Baseline", y = "Density") + ylim(0, 0.15)
-apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) + geom_histogram(fill = "#416b85", bins = 18) + labs(x = "Apps difference: Goal - Baseline", y = "Density")
+hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) +
+  geom_histogram(fill = "#416b85", bins = 18) +
+  labs(x = "Hours difference: Goal - Baseline", y = "Density") +
+  ylim(0, 0.15)
+apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) +
+  geom_histogram(fill = "#416b85", bins = 18) +
+  labs(x = "Apps difference: Goal - Baseline", y = "Density")
 plot_grid(hours_diff_density, apps_diff_density)
 ggsave("figure1.jpg")
 ```
@@ -109,13 +112,20 @@ Table 5
 #b1_6_t: Fam./Friends
 #b4_t: employer responses
 
-m1_t5 <- lm(b1_1_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_1 + missd_bs_c1_1 + as.factor(location_f) + as.factor(round), data = data2)
-m2_t5 <- lm(b1_2_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_2 + missd_bs_c1_2 + as.factor(location_f) + as.factor(round), data = data2)
-m3_t5 <- lm(b1_3_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_3 + missd_bs_c1_3 + as.factor(location_f) + as.factor(round), data = data2)
-m4_t5 <- lm(b1_4_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_4 + missd_bs_c1_4 + as.factor(location_f) + as.factor(round), data = data2)
-m5_t5 <- lm(b1_5_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_5 + missd_bs_c1_5 + as.factor(location_f) + as.factor(round), data = data2)
-m6_t5 <- lm(b1_6_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_6 + missd_bs_c1_6 + as.factor(location_f) + as.factor(round), data = data2)
-stargazer(m1_t5, m2_t5, m3_t5, m4_t5, m5_t5, m6_t5, colnames = FALSE, column.labels = c("Empl. agency", "Dropped CV", "Placed ad", "Answered ad", "Searched online", "Fam./friends"), keep = c("ws_d", "ws_plus_d"), keep.stat =c("n","rsq"), type = "text", supress.errors = TRUE, title="Table 5—Effects on Frequency of Search-Channel Use", add.lines = list(c("p-value", "0.0047**", "0.001101**", "0.4906", "0.001291**", "0.0009031***", "0.7577")))
+m1_t5 <- felm(b1_1_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_1 + missd_bs_c1_1 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2)
+m2_t5 <- felm(b1_2_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_2 + missd_bs_c1_2 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2)
+m3_t5 <- felm(b1_3_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_3 + missd_bs_c1_3 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2)
+m4_t5 <- felm(b1_4_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_4 + missd_bs_c1_4 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2)
+m5_t5 <- felm(b1_5_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_5 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2) #missd_bs_c1_5 removed because it generated a coefficent of NaN which made the linearHypothesis test not work. my numbers here still match the paper's though.
+m6_t5 <- felm(b1_6_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_6 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = data2) #missd_bs_c1_6 removed for same reason
+stargazer(m1_t5, m2_t5, m3_t5, m4_t5, m5_t5, m6_t5,
+          colnames = FALSE,
+          column.labels = c("Empl. agency", "Dropped CV", "Placed ad", "Answered ad", "Searched online", "Fam./friends"),
+          keep = c("ws_d", "ws_plus_d"), keep.stat =c("n","rsq"),
+          type = "text",
+          supress.errors = TRUE,
+          title="Table 5—Effects on Frequency of Search-Channel Use",
+          add.lines = list(c("p-value", "0.009711**", "0.003649**", "0.5369", "0.003324**", "0.006298 **", "0.786")))
 
 #stargazer type = latex
 ```
@@ -145,9 +155,6 @@ linearHypothesis(m5_t5, c("ws_d = ws_plus_d"), singular.ok = TRUE)
 linearHypothesis(m6_t5, c("ws_d = ws_plus_d"), singular.ok = TRUE)
 ```
 
-```{r}
-
-```
 
 Table 3:
 
