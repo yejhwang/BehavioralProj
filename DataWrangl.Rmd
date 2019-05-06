@@ -282,37 +282,20 @@ m4_t5 <- felm(Answered_ad ~ WS_basic + WS_plus + educ_yr + age_yr + female_d + b
 m5_t5 <- felm(Searched_online ~ WS_basic + WS_plus + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_5 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t5_data) #missd_bs_c1_5 removed because it generated a coefficent of NaN which made the linearHypothesis test not work. my numbers here still match the paper's though.
 m6_t5 <- felm(Fam.friends ~ WS_basic + WS_plus + educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d + nomiss_bs_c1_6 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t5_data) #missd_bs_c1_6 removed for same reason
 
+#Linear hypothesis tests to generate p-values
+lh_m1_t5_p <- round(linearHypothesis(m1_t5, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m2_t5_p <- round(linearHypothesis(m2_t5, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m3_t5_p <- round(linearHypothesis(m3_t5, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m4_t5_p <- round(linearHypothesis(m4_t5, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m5_t5_p <- round(linearHypothesis(m5_t5, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m6_t5_p <- round(linearHypothesis(m6_t5, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+
 #Generate table
 stargazer(m1_t5, m2_t5, m3_t5, m4_t5, m5_t5, m6_t5,
           keep = c("WS_basic", "WS_plus"), keep.stat =c("n","rsq"),
           type = "text",
           title="Table 5—Effects on Frequency of Search-Channel Use",
-          add.lines = list(c("p-value", "0.010", "0.004", "0.537", "0.003", "0.006", "0.786"))) #from linear hypothesis tests below
+          add.lines = list(c("p-value", lh_m1_t5_p, lh_m2_t5_p, lh_m3_t5_p, lh_m4_t5_p, lh_m5_t5_p, lh_m6_t5_p)))
 
 #stargazer type = latex
-```
-
-###Linear hypothesis tests to generate p-values in table
-```{r}
-linearHypothesis(m1_t5, c("WS_basic = WS_plus"))
-```
-
-```{r}
-linearHypothesis(m2_t5, c("WS_basic = WS_plus"))
-```
-
-```{r}
-linearHypothesis(m3_t5, c("WS_basic = WS_plus"))
-```
-
-```{r}
-linearHypothesis(m4_t5, c("WS_basic = WS_plus"))
-```
-
-```{r}
-linearHypothesis(m5_t5, c("WS_basic = WS_plus"), singular.ok = TRUE)
-```
-
-```{r}
-linearHypothesis(m6_t5, c("WS_basic = WS_plus"), singular.ok = TRUE)
 ```
