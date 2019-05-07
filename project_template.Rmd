@@ -1,0 +1,79 @@
+---
+title: Title of Your Paper Here
+author:
+  - name: First Name Last Name
+    email: youremail@smith.edu
+    affiliation: Smith College
+    footnote: Corresponding Author
+  - name: First Name Last Name
+    email: youremail@smith.edu
+    affiliation: Smith College
+  - name: First Name Last Name
+    email: youremail@smith.edu
+    affiliation: Smith College
+  - name: First Name Last Name
+    email: youremail@smith.edu
+    affiliation: Smith College
+  - name: Simon Halliday
+    email: shalliday@smith.edu
+    affiliation: Smith College
+address:
+  - code: Smith College
+    address: Department of Economics, Pierce Hall, Northapmton, MA, 01063
+
+abstract: 
+  [WRITE AN ABSTRACT FOR YOUR PAPER HERE] \par
+  
+  \textbf{JEL Classification:} [PUT JEL CODES HERE] \par
+  
+  \textbf{Keywords:} [PUT KEYWORDS SEPARATED BY SEMICOLONS HERE]
+
+bibliography: bibliography.bib
+output: rticles::elsevier_article
+---
+
+```{r setup, include=FALSE}
+## This chunk just sets it so that code will not show up on slides
+#knitr::opts_chunk$set(echo = FALSE)
+```
+
+```{r message=FALSE, results='hide', echo=FALSE, warning=FALSE, include=FALSE}
+#be warned...it takes a while
+rm(list = ls()) #This clears the list databse
+library(rticles)
+library(tidyverse)
+library(stargazer)
+library(plm)
+```
+
+
+```{r import_data}
+#Import your data in this code chunk
+
+
+```
+
+
+# 1. Introduction
+
+
+# 2. Literature and Background 
+
+
+# 3. Methods and Data
+
+
+# 4. Reproduction of [Author Names and date of paper]
+
+
+# 5. Proposal 
+
+
+# 6. Conclusion 
+
+
+
+
+
+# References
+
