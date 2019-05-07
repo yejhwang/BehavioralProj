@@ -24,6 +24,7 @@ library(ggplot2)
 library(cowplot)
 library(stargazer)
 library(car)
+library(cowplot) #plot side-by-side graphs
 library(knitr) #to enable kable for testing. 
 library(lfe) #To use the 'felm' command to run fixed effect linear models with clusterin
 
@@ -65,7 +66,7 @@ stargazer(data.frame(d),
 
 #Figure 1
 
-```{r figure1}
+```{r figure1, warning = FALSE}
 hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) +
   geom_histogram(fill = "#416b85", bins = 18) +
   labs(x = "Hours difference: Goal - Baseline", y = "Density") +
@@ -74,7 +75,6 @@ apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) +
   geom_histogram(fill = "#416b85", bins = 18) +
   labs(x = "Apps difference: Goal - Baseline", y = "Density")
 plot_grid(hours_diff_density, apps_diff_density)
-ggsave("figure1.jpg")
 ```
 
 
