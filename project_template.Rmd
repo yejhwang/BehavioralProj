@@ -29,6 +29,7 @@ abstract:
   \textbf{Keywords:} Behavioral, Microeconomics, Present Bias, Time Inconsistency
 
 bibliography: bibliography.bib
+header-includes: \usepackage{float}
 output: rticles::elsevier_article
 ---
 
@@ -70,8 +71,7 @@ data3 <- read_dta("./data/final_data3.dta")
 # 3. Methods and Data
 
 
-# 4. Reproduction of [Author Names and date of paper]
-## Table 1
+# 4. Reproduction of Abel et al. (2019)
 ```{r table1, results = "asis"}
 controlGroup <- data1 %>% select(age_yr, female_d, educ_yr, bs_b15a, moved_yesno_d, bs_b1_ever_job_d, bs_b13_reserv_wage, bs_b14, bs_transport_cost, bs_b16, bs_c2, bs_c3)
 names(controlGroup) <- c("Age", "Female", "Years of schooling", "Household size", "Moved to Johannesburg", "Ever employed", "Reservation wage", "Fair wage", "Job search transport cost", "Number employed friends", "Job search hours (week)", "Job applications (month)")
@@ -79,11 +79,9 @@ stargazer::stargazer(data.frame(controlGroup),
                      summary.stat = c("n", "mean", "median", "sd"),
                      type = "latex",
                      header = FALSE,
-                     float = FALSE,
                      title = "Sample Characteristics")
 ```
 
-## Table 2
 ```{r select relevant variables}
 # Select variables in Table 2 from data1, put in dataframe d
 vars <- c(34, 35, 36, 51, 52)
@@ -96,11 +94,9 @@ stargazer(data.frame(d),
           title = "Action-Plan Descriptives",
           omit.summary.stat = c("min", "max", "p25", "p75"),
           header = FALSE,
-          float = FALSE,
           type="latex")
 ```
 
-## Figure 1
 ```{r figure1, warning = FALSE}
 hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) +
   geom_histogram(fill = "#416b85", bins = 18) +
@@ -109,13 +105,12 @@ hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) +
 apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) +
   geom_histogram(fill = "#416b85", bins = 18) +
   labs(x = "Apps difference: Goal-Baseline", y = "Density")
-f1_title <- ggdraw() + draw_label("Intention-Behavior Gap: Difference at Baseline")
+f1_title <- ggdraw() + draw_label("Figure 1 - Intention-Behavior Gap: Difference at Baseline")
 graph_grid <- plot_grid(hours_diff_density, apps_diff_density)
 plot_grid(f1_title, graph_grid, ncol=1, rel_heights=c(0.1, 1))
 ```
 
-##Table 5
-```{r create models+stargazer table, warning = FALSE, results = "asis"}
+```{r table5, warning = FALSE, results = "asis"}
 #Select only relevant data
 t5_data <- data2 %>% select(b1_1_t, b1_2_t, b1_3_t, b1_4_t, b1_5_t, b1_6_t, ws_d, ws_plus_d, educ_yr, age_yr, female_d, bs_b15a, lang_xhosa_d, lang_venda_d, lang_zulu_d, nomiss_bs_c1_1, nomiss_bs_c1_2, nomiss_bs_c1_3, nomiss_bs_c1_4, nomiss_bs_c1_5, nomiss_bs_c1_6, missd_bs_c1_1, missd_bs_c1_2, missd_bs_c1_3, missd_bs_c1_4, location_f, round, id)
 
@@ -152,7 +147,7 @@ stargazer(m1_t5, m2_t5, m3_t5, m4_t5, m5_t5, m6_t5,
           title="Effects on Frequency of Search-Channel Use",
           add.lines = list(c("p-value", lh_m1_t5_p, lh_m2_t5_p, lh_m3_t5_p, lh_m4_t5_p, lh_m5_t5_p, lh_m6_t5_p)),
           header = FALSE,
-          float = FALSE,
+          table.placement = "H",
           column.sep.width = "-8pt")
 ```
 
