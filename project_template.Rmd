@@ -21,12 +21,12 @@ address:
   - code: Smith College
     address: Department of Economics, Pierce Hall, Northapmton, MA, 01063
 
-abstract: 
-  [WRITE AN ABSTRACT FOR YOUR PAPER HERE] \par
+abstract:
+  WRITE AN ABSTRACT FOR YOUR PAPER HERE \par
   
-  \textbf{JEL Classification:} [PUT JEL CODES HERE] \par
+  \textbf{JEL Classification:} D90 \par
   
-  \textbf{Keywords:} [PUT KEYWORDS SEPARATED BY SEMICOLONS HERE]
+  \textbf{Keywords:} Behavioral, Microeconomics, Present Bias, Time Inconsistency
 
 bibliography: bibliography.bib
 output: rticles::elsevier_article
@@ -34,7 +34,7 @@ output: rticles::elsevier_article
 
 ```{r setup, include=FALSE}
 ## This chunk just sets it so that code will not show up on slides
-#knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(echo = FALSE)
 ```
 
 ```{r message=FALSE, results='hide', echo=FALSE, warning=FALSE, include=FALSE}
@@ -72,32 +72,36 @@ data3 <- read_dta("./data/final_data3.dta")
 
 # 4. Reproduction of [Author Names and date of paper]
 ## Table 1
-```{r table1, echo = FALSE}
+```{r table1, results = "asis"}
 controlGroup <- data1 %>% select(age_yr, female_d, educ_yr, bs_b15a, moved_yesno_d, bs_b1_ever_job_d, bs_b13_reserv_wage, bs_b14, bs_transport_cost, bs_b16, bs_c2, bs_c3)
 names(controlGroup) <- c("Age", "Female", "Years of schooling", "Household size", "Moved to Johannesburg", "Ever employed", "Reservation wage", "Fair wage", "Job search transport cost", "Number employed friends", "Job search hours (week)", "Job applications (month)")
 stargazer::stargazer(data.frame(controlGroup),
                      summary.stat = c("n", "mean", "median", "sd"),
-                     type = "text",
-                     title = "Table 1—Sample Characteristics")
+                     type = "latex",
+                     header = FALSE,
+                     float = FALSE,
+                     title = "Sample Characteristics")
 ```
 
 ## Table 2
-```{r select relevant variables, echo = FALSE}
+```{r select relevant variables}
 # Select variables in Table 2 from data1, put in dataframe d
 vars <- c(34, 35, 36, 51, 52)
 d <- data1[,vars]
 ```
 
-```{r rename vars & create table, echo = FALSE}
+```{r rename vars & create table, results = "asis"}
 names(d) <- c("Goal: Opportunities to identify", "Goal: Applications to submit", "Goal: Job search hours", "Activity days", "Completed AP")
 stargazer(data.frame(d),
-          title = "Table 2—Action-Plan Descriptives",
+          title = "Action-Plan Descriptives",
           omit.summary.stat = c("min", "max", "p25", "p75"),
-          type="text")
+          header = FALSE,
+          float = FALSE,
+          type="latex")
 ```
 
 ## Figure 1
-```{r figure1, warning = FALSE, echo = FALSE}
+```{r figure1, warning = FALSE}
 hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) +
   geom_histogram(fill = "#416b85", bins = 18) +
   labs(x = "Hours difference: Goal - Baseline", y = "Density") +
@@ -109,7 +113,7 @@ plot_grid(hours_diff_density, apps_diff_density)
 ```
 
 ##Table 5
-```{r create models, stargazer table, warning = FALSE, echo = FALSE}
+```{r create models+stargazer table, warning = FALSE, results = "asis"}
 #Select only relevant data
 t5_data <- data2 %>% select(b1_1_t, b1_2_t, b1_3_t, b1_4_t, b1_5_t, b1_6_t, ws_d, ws_plus_d, educ_yr, age_yr, female_d, bs_b15a, lang_xhosa_d, lang_venda_d, lang_zulu_d, nomiss_bs_c1_1, nomiss_bs_c1_2, nomiss_bs_c1_3, nomiss_bs_c1_4, nomiss_bs_c1_5, nomiss_bs_c1_6, missd_bs_c1_1, missd_bs_c1_2, missd_bs_c1_3, missd_bs_c1_4, location_f, round, id)
 
@@ -142,11 +146,12 @@ lh_m6_t5_p <- round(linearHypothesis(m6_t5, c("WS_basic = WS_plus"))$`Pr(>Chisq)
 #Generate table
 stargazer(m1_t5, m2_t5, m3_t5, m4_t5, m5_t5, m6_t5,
           keep = c("WS_basic", "WS_plus"), keep.stat =c("n","rsq"),
-          type = "text",
-          title="Table 5—Effects on Frequency of Search-Channel Use",
-          add.lines = list(c("p-value", lh_m1_t5_p, lh_m2_t5_p, lh_m3_t5_p, lh_m4_t5_p, lh_m5_t5_p, lh_m6_t5_p)))
-
-#stargazer type = latex
+          type = "latex",
+          title="Effects on Frequency of Search-Channel Use",
+          add.lines = list(c("p-value", lh_m1_t5_p, lh_m2_t5_p, lh_m3_t5_p, lh_m4_t5_p, lh_m5_t5_p, lh_m6_t5_p)),
+          header = FALSE,
+          float = FALSE,
+          column.sep.width = "-8pt")
 ```
 
 # 5. Proposal 
