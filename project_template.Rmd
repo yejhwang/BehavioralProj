@@ -37,7 +37,7 @@ output: rticles::elsevier_article
 knitr::opts_chunk$set(echo = FALSE)
 ```
 
-```{r message=FALSE, results='hide', echo=FALSE, warning=FALSE, include=FALSE}
+```{r load libraries, message=FALSE, results='hide', echo=FALSE, warning=FALSE, include=FALSE}
 #be warned...it takes a while
 rm(list = ls()) #This clears the list databse
 library(rticles)
@@ -53,7 +53,7 @@ library(lfe) #To use the 'felm' command to run fixed effect linear models with c
 ```
 
 
-```{r import_data, echo=FALSE}
+```{r import data, echo=FALSE}
 #Import your data in this code chunk
 data1 <- read_dta("./data/final_data1.dta")
 data2 <- read_dta("./data/final_data2.dta")
@@ -104,12 +104,14 @@ stargazer(data.frame(d),
 ```{r figure1, warning = FALSE}
 hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) +
   geom_histogram(fill = "#416b85", bins = 18) +
-  labs(x = "Hours difference: Goal - Baseline", y = "Density") +
+  labs(x = "Hours difference: Goal-Baseline", y = "Density") +
   ylim(0, 0.15)
 apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) +
   geom_histogram(fill = "#416b85", bins = 18) +
-  labs(x = "Apps difference: Goal - Baseline", y = "Density")
-plot_grid(hours_diff_density, apps_diff_density)
+  labs(x = "Apps difference: Goal-Baseline", y = "Density")
+f1_title <- ggdraw() + draw_label("Intention-Behavior Gap: Difference at Baseline")
+graph_grid <- plot_grid(hours_diff_density, apps_diff_density)
+plot_grid(f1_title, graph_grid, ncol=1, rel_heights=c(0.1, 1))
 ```
 
 ##Table 5

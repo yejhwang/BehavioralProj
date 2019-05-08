@@ -74,7 +74,9 @@ hours_diff_density <- ggplot(data1, aes(hours_diff, stat(density))) +
 apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) +
   geom_histogram(fill = "#416b85", bins = 18) +
   labs(x = "Apps difference: Goal - Baseline", y = "Density")
-plot_grid(hours_diff_density, apps_diff_density)
+f1_title <- ggdraw() + draw_label("Intention-Behavior Gap: Difference at Baseline")
+graph_grid <- plot_grid(hours_diff_density, apps_diff_density)
+plot_grid(f1_title, graph_grid, ncol=1, rel_heights=c(0.1, 1))
 ```
 
 
