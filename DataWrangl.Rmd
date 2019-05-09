@@ -152,6 +152,10 @@ m2_t4 <- felm(Responses ~ WS_basic + WS_plus +
                 nomiss_bs_c4 + missd_bs_c4 +
                 educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
                 as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+#Models 3 and 4 seem to have issues
+#There looks to be a problem with variable nomiss_bs_c6
+#library(mosaic)
+#favstats(~nomiss_bs_c6, data = t4_data)
 m3_t4 <- felm(Offers ~ WS_basic + WS_plus +
                 missd_bs_c6 +
                 as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
@@ -164,7 +168,10 @@ m5_t4 <- felm(Employed ~ WS_basic + WS_plus +
 m6_t4 <- felm(Employed ~ WS_basic + WS_plus +
                 educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
                 as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+```
 
+
+```{r hyptests_t4}
 #Linear hypothesis tests to generate p-values
 lh_m1_t4_p <- round(linearHypothesis(m1_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
 lh_m2_t4_p <- round(linearHypothesis(m2_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
@@ -172,9 +179,10 @@ lh_m3_t4_p <- round(linearHypothesis(m3_t4, c("WS_basic = WS_plus"), singular.ok
 lh_m4_t4_p <- round(linearHypothesis(m4_t4, c("WS_basic = WS_plus"), singular.ok = TRUE)$`Pr(>Chisq)`[2], digits = 3)
 lh_m5_t4_p <- round(linearHypothesis(m5_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
 lh_m6_t4_p <- round(linearHypothesis(m6_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+```
 
 
-
+```{r table4_gentable}
 #Generate table
 stargazer(m1_t4, m2_t4, m3_t4, m4_t4, m5_t4, m6_t4,
           keep = c("WS_basic", "WS_plus"), keep.stat = c("n","rsq"),
