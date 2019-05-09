@@ -81,69 +81,167 @@ plot_grid(f1_title, graph_grid, ncol=1, rel_heights=c(0.1, 1))
 
 
 #Table 3
-
-```{r}
-final_data1 <- read_dta("./data/final_data1.dta")
-final_data2 <- read_dta("./data/final_data2.dta")
-final_data3 <- read_dta("./data/final_data3.dta")
-```
-
-```{r table3 reproduction}
-
-m1_t3 <- lm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 + as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m1_t3)
-
-m2_t3 <- lm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 +
-               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
-               as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m2_t3)
-
-m3_t3 <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 + as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m3_t3)
-
-m4_t3 <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
-               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
-               as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m4_t3)
-
-stargazer(m1_t3,m2_t3,m3_t3,m4_t3, keep=c("ws_d","ws_plus_d"), keep.stat = c("n","rsq"), type = "text", column.labels = c("Search Hours", "Search Hours", "Applications", "Applications"), covariate.labels =c("WS basic", "WS plus"), title="Table 3--EFFECTS ON JOB SEARCH INTENSITY",
-          add.lines = 
-            list(c("Covariates", "No", "Yes", "No", "Yes"),
-                  c("p-value", "0.7109","0.4656", "0.0002516 ***", "0.0008659 ***")))
-#na.rm=TRUE
-```
-
-
-
 ```{r table3_reproduction}
 
-#TABLE3
+#Select only relevant data
+t3_data <- data2 %>% select(b2_t, b3_t, ws_d, ws_plus_d,
+                            nomiss_bs_c2, nomiss_bs_c3, missd_bs_c2, missd_bs_c3,
+                            educ_yr, age_yr, female_d, bs_b15a, lang_xhosa_d, lang_venda_d, lang_zulu_d,
+                            location_f, round, id)
 
-m1_t3cluster <- lm.cluster(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 + as.factor(location_f) + as.factor(round), data = final_data2, cluster = "id")
-summary(m1_t3cluster)
+#Rename variables that will appear in table
+colnames(t3_data)[colnames(t3_data) == "b2_t"] <- "Search_Hours"
+colnames(t3_data)[colnames(t3_data) == "b3_t"] <- "Applications"
+colnames(t3_data)[colnames(t3_data) == "ws_d"] <- "WS_basic"
+colnames(t3_data)[colnames(t3_data) == "ws_plus_d"] <- "WS_plus"
+
+#Build models
+m1_t3 <- felm(Search_Hours ~ WS_basic + WS_plus +
+                nomiss_bs_c2 + missd_bs_c2 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t3_data)
+m2_t3 <- felm(Search_Hours ~ WS_basic + WS_plus +
+                nomiss_bs_c2 + missd_bs_c2 +
+                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t3_data)
+m3_t3 <- felm(Applications ~ WS_basic + WS_plus +
+                nomiss_bs_c3 + missd_bs_c3 +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t3_data)
+m4_t3 <- felm(Applications ~ WS_basic + WS_plus +
+                nomiss_bs_c3 + missd_bs_c3 +
+                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t3_data)
+
+#Linear hypothesis tests to generate p-values
+lh_m1_t3_p <- round(linearHypothesis(m1_t3, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m2_t3_p <- round(linearHypothesis(m2_t3, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m3_t3_p <- round(linearHypothesis(m3_t3, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m4_t3_p <- round(linearHypothesis(m4_t3, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+
+#Generate table
+stargazer(m1_t3, m2_t3, m3_t3, m4_t3,
+          keep = c("WS_basic", "WS_plus"), keep.stat = c("n","rsq"),
+          type = "text",
+          title= "Table 3 - Effects on Job Search Intensity",
+          add.lines = list(c("Covariates", "No", "Yes", "No", "Yes"),
+                           c("p-value", lh_m1_t3_p, lh_m2_t3_p, lh_m3_t3_p, lh_m4_t3_p)))
+
+#stargazer type = latex
+                            
+```
 
 
-m2_t3 <- lm(b2_t ~ ws_d + ws_plus_d + nomiss_bs_c2 + missd_bs_c2 +
-               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
-               as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m2_t3)
+#Table 4
+```{r table4_reproduction}
 
-m3_t3 <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 + as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m3_t3)
+#Select only relevant data
+t4_data <- data2 %>% select(b4_t, b6_t, a1_t, ws_d, ws_plus_d,
+                            nomiss_bs_c4, nomiss_bs_c6, missd_bs_c4, missd_bs_c6,
+                            educ_yr, age_yr, female_d, bs_b15a, lang_xhosa_d, lang_venda_d, lang_zulu_d,
+                            location_f, round, id)
 
-m4_t3 <- lm(b3_t ~ ws_d + ws_plus_d + nomiss_bs_c3 + missd_bs_c3 +
-               educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
-               as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m4_t3)
+#Rename variables that will appear in table
+colnames(t4_data)[colnames(t4_data) == "b4_t"] <- "Responses"
+colnames(t4_data)[colnames(t4_data) == "b6_t"] <- "Offers"
+colnames(t4_data)[colnames(t4_data) == "a1_t"] <- "Employed"
+colnames(t4_data)[colnames(t4_data) == "ws_d"] <- "WS_basic"
+colnames(t4_data)[colnames(t4_data) == "ws_plus_d"] <- "WS_plus"
+
+#Build models
+m1_t4 <- felm(Responses ~ WS_basic + WS_plus +
+                nomiss_bs_c4 + missd_bs_c4 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+m2_t4 <- felm(Responses ~ WS_basic + WS_plus +
+                nomiss_bs_c4 + missd_bs_c4 +
+                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+m3_t4 <- felm(Offers ~ WS_basic + WS_plus +
+                nomiss_bs_c6 + missd_bs_c6 +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+m4_t4 <- felm(Offers ~ WS_basic + WS_plus +
+                nomiss_bs_c6 + missd_bs_c6 +
+                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+m5_t4 <- felm(Employed ~ WS_basic + WS_plus +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+m6_t4 <- felm(Employed ~ WS_basic + WS_plus +
+                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+
+#Linear hypothesis tests to generate p-values
+lh_m1_t4_p <- round(linearHypothesis(m1_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m2_t4_p <- round(linearHypothesis(m2_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m3_t4_p <- round(linearHypothesis(m3_t4, c("WS_basic = WS_plus"), singular.ok = TRUE)$`Pr(>Chisq)`[2], digits = 3)
+lh_m4_t4_p <- round(linearHypothesis(m4_t4, c("WS_basic = WS_plus"), singular.ok = TRUE)$`Pr(>Chisq)`[2], digits = 3)
+lh_m5_t4_p <- round(linearHypothesis(m5_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m6_t4_p <- round(linearHypothesis(m6_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
 
 
-#kable(m1_t3cluster$vcov[2])
 
-stargazer(m1_t3cluster$lm_res[1],m2_t3,m3_t3,m4_t3, keep=c("ws_d","ws_plus_d"), keep.stat = c("n","rsq"), type = "text", column.labels = c("Search Hours", "Search Hours", "Applications", "Applications"), covariate.labels =c("WS basic", "WS plus"), title="Table 3--EFFECTS ON JOB SEARCH INTENSITY",
-          add.lines = 
-            list(c("Covariates", "No", "Yes", "No", "Yes"),
-                  c("p-value", "0.7109","0.4656", "0.0002516 ***", "0.0008659 ***")))
-#na.rm=TRUE
+#Generate table
+stargazer(m1_t4, m2_t4, m3_t4, m4_t4, m5_t4, m6_t4,
+          keep = c("WS_basic", "WS_plus"), keep.stat = c("n","rsq"),
+          type = "text",
+          title= "Table 4 - Effects on Employment Outcomes",
+          add.lines = list(c("Covariates", "No", "Yes", "No", "Yes", "No", "Yes"),
+                           c("p-value", lh_m1_t4_p, lh_m2_t4_p, lh_m3_t4_p, lh_m4_t4_p, lh_m5_t4_p,lh_m6_t4_p)))
+
+#stargazer type = latex
+                            
+```
+
+
+
+#Table 4
+```{r table4_reproduction OLD}
+
+
+
+#m1_t4 <- lm(b4_t ~ ws_d + ws_plus_d + nomiss_bs_c4 + missd_bs_c4 + as.factor(location_f) + as.factor(round), data = final_data2)
+#summary(m1_t4)
+
+#m2_t4 <- #lm(b4_t ~ ws_d + ws_plus_d + nomiss_bs_c4 + missd_bs_c4 +
+            #educ_yr + age_yr + female_d + bs_b15a +
+            #lang_xhosa_d + lang_venda_d + lang_zulu_d +
+            #as.factor(location_f) + as.factor(round), data = final_data2)
+#summary(m2_t4)
+
+#m3_t4 <- lm(b6_t ~ ws_d + ws_plus_d + nomiss_bs_c6 + missd_bs_c6 + 
+             # as.factor(location_f) + as.factor(round), data = final_data2)
+#summary(m3_t4)
+  
+
+#m4_t4 <- lm(b6_t ~ ws_d + ws_plus_d + nomiss_bs_c6 + missd_bs_c6 +
+             #educ_yr + age_yr + female_d + bs_b15a +
+             #lang_xhosa_d + lang_venda_d + lang_zulu_d +
+             #as.factor(location_f) + as.factor(round), data = final_data2)
+#summary(m4_t4)
+
+
+#m5_t4 <- lm(a1_t ~ ws_d + ws_plus_d +
+             #as.factor(location_f) + as.factor(round), data = final_data2)
+#summary(m5_t4)
+  
+
+#m6_t4 <- lm(a1_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a +
+            #lang_xhosa_d + lang_venda_d + lang_zulu_d +
+            #as.factor(location_f) + as.factor(round), data = final_data2)
+#summary(m6_t4)
+
+#stargazer(m1_t4,m2_t4,m3_t4,m4_t4, m5_t4, m6_t4, keep = c("ws_d","ws_plus_d"), keep.stat = c("n","rsq"), type = "text", column.labels = c("Responses", "Responses", "Offers", "Offers","Employed", "Employed"), covariate.labels =c("WS basic", "WS plus"), title="Table 4--EFFECTS ON EMPLOYMENT OUTCOMES",
+          #add.lines = 
+            #list(c("Covariates", "No", "Yes", "No", "Yes", "No", "Yes"),
+          
+          #c("p-value","0.01505*","0.02838*", "", "", "0.007805**", "0.005438**")))
+
+```
+
+```{r table4_p-valuesOLD, eval = FALSE}
+#get p-values and manually insert into stargazer command in previous chunk
+
+linearHypothesis(m1_t4,c("ws_d"="ws_plus_d"))
+linearHypothesis(m2_t4,c("ws_d"="ws_plus_d"))
+linearHypothesis(m3_t4,c("ws_d"="ws_plus_d"), singular.ok = TRUE) #error
+linearHypothesis(m4_t4,c("ws_d"="ws_plus_d")) #same error
+linearHypothesis(m5_t4,c("ws_d"="ws_plus_d"))
+linearHypothesis(m6_t4,c("ws_d"="ws_plus_d"))
 ```
 
 
@@ -193,73 +291,6 @@ stargazer(m1t3c, m2t3c, m3t3c, m4t3c, type="text")
 #SDH: I'm not too sure why it's throwing out the error it is. 
 ```
 
-
-
-
-```{r table3_p-values}
-#get p-values and manually insert into stargazer command in previous chunk
-
-linearHypothesis(m1_t3,c("w_d"="ws_plus_d"))
-linearHypothesis(m2_t3,c("w_d"="ws_plus_d"))
-linearHypothesis(m3_t3,c("w_d"="ws_plus_d"))
-linearHypothesis(m4_t3,c("w_d"="ws_plus_d"))
-
-```
-
-#Table 4
-```{r table4_reproduction}
-
-
-
-m1_t4 <- lm(b4_t ~ ws_d + ws_plus_d + nomiss_bs_c4 + missd_bs_c4 + as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m1_t4)
-
-m2_t4 <- lm(b4_t ~ ws_d + ws_plus_d + nomiss_bs_c4 + missd_bs_c4 +
-            educ_yr + age_yr + female_d + bs_b15a +
-            lang_xhosa_d + lang_venda_d + lang_zulu_d +
-            as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m2_t4)
-
-m3_t4 <- lm(b6_t ~ ws_d + ws_plus_d + nomiss_bs_c6 + missd_bs_c6 + 
-              as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m3_t4)
-  
-
-m4_t4 <- lm(b6_t ~ ws_d + ws_plus_d + nomiss_bs_c6 + missd_bs_c6 +
-             educ_yr + age_yr + female_d + bs_b15a +
-             lang_xhosa_d + lang_venda_d + lang_zulu_d +
-             as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m4_t4)
-
-
-m5_t4 <- lm(a1_t ~ ws_d + ws_plus_d +
-             as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m5_t4)
-  
-
-m6_t4 <- lm(a1_t ~ ws_d + ws_plus_d + educ_yr + age_yr + female_d + bs_b15a +
-            lang_xhosa_d + lang_venda_d + lang_zulu_d +
-            as.factor(location_f) + as.factor(round), data = final_data2)
-summary(m6_t4)
-
-stargazer(m1_t4,m2_t4,m3_t4,m4_t4, m5_t4, m6_t4, keep = c("ws_d","ws_plus_d"), keep.stat = c("n","rsq"), type = "text", column.labels = c("Responses", "Responses", "Offers", "Offers","Employed", "Employed"), covariate.labels =c("WS basic", "WS plus"), title="Table 4--EFFECTS ON EMPLOYMENT OUTCOMES",
-          add.lines = 
-            list(c("Covariates", "No", "Yes", "No", "Yes", "No", "Yes"),
-          
-          c("p-value","0.01505*","0.02838*", "", "", "0.007805**", "0.005438**")))
-
-```
-
-```{r table4_p-values, eval = FALSE}
-#get p-values and manually insert into stargazer command in previous chunk
-
-linearHypothesis(m1_t4,c("ws_d"="ws_plus_d"))
-linearHypothesis(m2_t4,c("ws_d"="ws_plus_d"))
-linearHypothesis(m3_t4,c("ws_d"="ws_plus_d"), singular.ok = TRUE) #error
-linearHypothesis(m4_t4,c("ws_d"="ws_plus_d")) #same error
-linearHypothesis(m5_t4,c("ws_d"="ws_plus_d"))
-linearHypothesis(m6_t4,c("ws_d"="ws_plus_d"))
-```
 
 ##Table 5
 ```{r create models, stargazer table}
