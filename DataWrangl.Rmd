@@ -17,7 +17,7 @@ Table 5-Effects on Frequency of Search-Channel Use
 Graphs:
 Figure 1: Intention-Behavior Gap: Difference at Baseline - density plot Hours and apps difference: Goal - Baseline
 
-```{r load packages & read in data}
+```{r load packages & read in data, warning=FALSE, message=FALSE}
 library(tidyverse)
 library(haven) #haven is part of tidyverse, but for some reason, this is needed.
 library(ggplot2)
@@ -81,7 +81,7 @@ plot_grid(f1_title, graph_grid, ncol=1, rel_heights=c(0.1, 1))
 
 
 #Table 3
-```{r table3_reproduction}
+```{r table3_reproduction, warning=FALSE, message=FALSE}
 
 #Select only relevant data
 t3_data <- data2 %>% select(b2_t, b3_t, ws_d, ws_plus_d,
@@ -130,7 +130,7 @@ stargazer(m1_t3, m2_t3, m3_t3, m4_t3,
 
 
 #Table 4
-```{r table4_reproduction}
+```{r table4_reproduction, warning=FALSE, message=FALSE}
 
 #Select only relevant data
 t4_data <- data2 %>% select(b4_t, b6_t, a1_t, ws_d, ws_plus_d,
@@ -153,10 +153,10 @@ m2_t4 <- felm(Responses ~ WS_basic + WS_plus +
                 educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
                 as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
 m3_t4 <- felm(Offers ~ WS_basic + WS_plus +
-                nomiss_bs_c6 + missd_bs_c6 +
+                missd_bs_c6 +
                 as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
 m4_t4 <- felm(Offers ~ WS_basic + WS_plus +
-                nomiss_bs_c6 + missd_bs_c6 +
+                missd_bs_c6 +
                 educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
                 as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
 m5_t4 <- felm(Employed ~ WS_basic + WS_plus +
