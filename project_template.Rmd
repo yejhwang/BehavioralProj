@@ -14,9 +14,6 @@ author:
   - name: Kelly Pien
     email: kpien@smith.edu
     affiliation: Smith College
-  - name: Simon Halliday
-    email: shalliday@smith.edu
-    affiliation: Smith College
 address:
   - code: Smith College
     address: Department of Economics, Pierce Hall, Northapmton, MA, 01063
@@ -108,6 +105,102 @@ apps_diff_density <- ggplot(data1, aes(apps_diff, stat(density))) +
 f1_title <- ggdraw() + draw_label("Figure 1 - Intention-Behavior Gap: Difference at Baseline")
 graph_grid <- plot_grid(hours_diff_density, apps_diff_density)
 plot_grid(f1_title, graph_grid, ncol=1, rel_heights=c(0.1, 1))
+```
+
+```{r table3_reproduction, warning=FALSE, message=FALSE, results="asis"}
+#Select only relevant data
+t3_data <- data2 %>% select(b2_t, b3_t, ws_d, ws_plus_d,
+                            nomiss_bs_c2, nomiss_bs_c3, missd_bs_c2, missd_bs_c3,
+                            educ_yr, age_yr, female_d, bs_b15a, lang_xhosa_d, lang_venda_d, lang_zulu_d,
+                            location_f, round, id)
+
+#Rename variables that will appear in table
+colnames(t3_data)[colnames(t3_data) == "b2_t"] <- "Search_Hours"
+colnames(t3_data)[colnames(t3_data) == "b3_t"] <- "Applications"
+colnames(t3_data)[colnames(t3_data) == "ws_d"] <- "WS_basic"
+colnames(t3_data)[colnames(t3_data) == "ws_plus_d"] <- "WS_plus"
+
+#Build models
+m1_t3 <- felm(Search_Hours ~ WS_basic + WS_plus +
+                nomiss_bs_c2 + missd_bs_c2 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t3_data)
+m2_t3 <- felm(Search_Hours ~ WS_basic + WS_plus +
+                nomiss_bs_c2 + missd_bs_c2 +
+                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t3_data)
+m3_t3 <- felm(Applications ~ WS_basic + WS_plus +
+                nomiss_bs_c3 + missd_bs_c3 +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t3_data)
+m4_t3 <- felm(Applications ~ WS_basic + WS_plus +
+                nomiss_bs_c3 + missd_bs_c3 +
+                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t3_data)
+
+#Linear hypothesis tests to generate p-values
+lh_m1_t3_p <- round(linearHypothesis(m1_t3, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m2_t3_p <- round(linearHypothesis(m2_t3, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m3_t3_p <- round(linearHypothesis(m3_t3, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m4_t3_p <- round(linearHypothesis(m4_t3, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+
+#Generate table
+stargazer(m1_t3, m2_t3, m3_t3, m4_t3,
+          keep = c("WS_basic", "WS_plus"), keep.stat = c("n","rsq"),
+          type = "latex",
+          title= "Effects on Job Search Intensity",
+          header = FALSE,
+          add.lines = list(c("Covariates", "No", "Yes", "No", "Yes"),
+                           c("p-value", lh_m1_t3_p, lh_m2_t3_p, lh_m3_t3_p, lh_m4_t3_p)))
+```
+
+```{r table4_reproduction, warning=FALSE, message=FALSE, results = "asis"}
+#Select only relevant data
+t4_data <- data2 %>% select(b4_t, b6_t, a1_t, ws_d, ws_plus_d,
+                            nomiss_bs_c4, nomiss_bs_c6, missd_bs_c4, missd_bs_c6,
+                            educ_yr, age_yr, female_d, bs_b15a, lang_xhosa_d, lang_venda_d, lang_zulu_d,
+                            location_f, round, id)
+
+#Rename variables that will appear in table
+colnames(t4_data)[colnames(t4_data) == "b4_t"] <- "Responses"
+colnames(t4_data)[colnames(t4_data) == "b6_t"] <- "Offers"
+colnames(t4_data)[colnames(t4_data) == "a1_t"] <- "Employed"
+colnames(t4_data)[colnames(t4_data) == "ws_d"] <- "WS_basic"
+colnames(t4_data)[colnames(t4_data) == "ws_plus_d"] <- "WS_plus"
+
+#Build models
+m1_t4 <- felm(Responses ~ WS_basic + WS_plus +
+                nomiss_bs_c4 + missd_bs_c4 + as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+m2_t4 <- felm(Responses ~ WS_basic + WS_plus +
+                nomiss_bs_c4 + missd_bs_c4 +
+                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+m3_t4 <- felm(Offers ~ WS_basic + WS_plus +
+                missd_bs_c6 +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+m4_t4 <- felm(Offers ~ WS_basic + WS_plus +
+                missd_bs_c6 +
+                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+m5_t4 <- felm(Employed ~ WS_basic + WS_plus +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+m6_t4 <- felm(Employed ~ WS_basic + WS_plus +
+                educ_yr + age_yr + female_d + bs_b15a + lang_xhosa_d + lang_venda_d + lang_zulu_d +
+                as.factor(location_f) + as.factor(round) | 0 | 0 | id, data = t4_data)
+
+#Linear hypothesis tests to generate p-values
+lh_m1_t4_p <- round(linearHypothesis(m1_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m2_t4_p <- round(linearHypothesis(m2_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m3_t4_p <- round(linearHypothesis(m3_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m4_t4_p <- round(linearHypothesis(m4_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m5_t4_p <- round(linearHypothesis(m5_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+lh_m6_t4_p <- round(linearHypothesis(m6_t4, c("WS_basic = WS_plus"))$`Pr(>Chisq)`[2], digits = 3)
+
+#Generate table
+stargazer(m1_t4, m2_t4, m3_t4, m4_t4, m5_t4, m6_t4,
+          keep = c("WS_basic", "WS_plus"), keep.stat = c("n","rsq"),
+          type = "latex",
+          title= "Effects on Employment Outcomes",
+          header = FALSE,
+          add.lines = list(c("Covariates", "No", "Yes", "No", "Yes", "No", "Yes"),
+                           c("p-value", lh_m1_t4_p, lh_m2_t4_p, lh_m3_t4_p, lh_m4_t4_p, lh_m5_t4_p,lh_m6_t4_p)))
 ```
 
 ```{r table5, warning = FALSE, results = "asis"}
