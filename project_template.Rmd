@@ -63,7 +63,7 @@ data3 <- read_dta("./data/final_data3.dta")
 
 
 # 2. Literature and Background 
-
+@ajzen_theory_1991 proposed the theory of planned behavior which states that
 
 # 3. Methods and Data
 
@@ -111,8 +111,7 @@ plot_grid(f1_title, graph_grid, ncol=1, rel_heights=c(0.1, 1))
 #Select only relevant data
 t3_data <- data2 %>% select(b2_t, b3_t, ws_d, ws_plus_d,
                             nomiss_bs_c2, nomiss_bs_c3, missd_bs_c2, missd_bs_c3,
-                            educ_yr, age_yr, female_d, bs_b15a, lang_xhosa_d, lang_venda_d, lang_zulu_d,
-                            location_f, round, id)
+                            educ_yr, age_yr, female_d, bs_b15a, lang_xhosa_d, lang_venda_d, lang_zulu_d, location_f, round, id)
 
 #Rename variables that will appear in table
 colnames(t3_data)[colnames(t3_data) == "b2_t"] <- "Search_Hours"
